@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.CustomerDeleteDao">
+
+	<select id="search" resultType="entity.Customer" >
+		select * from customer_delete where 1=1 
+		<if test="customer.name != null and customer.name != '' ">
+			 and name like '%${customer.name}%'
+		</if>
+		 limit #{begin},2
+	</select>
+	
+	<select id="searchCount" resultType="int" >
+		select count(id) as n from customer_delete where 1=1 
+		<if test="name != null and name != '' ">
+			 and name like '%${name}%'
+		</if>
+	</select>
+	
+	<select id="searchById" resultType="entity.Customer" >
+		select * from customer_delete where id = #{0}
+	</select>
+	
+	<insert id="insert" parameterType="entity.Customer"  >
+		insert into customer_delete (name,sex,age,work,income,phone,models,dates,status) 
+		 values (#{name},#{sex}, #{age}, #{work},#{income}, #{phone},#{models},#{dates},#{status})
+	</insert>
+	
+	<delete id="delete">
+		delete from customer_delete where id =#{0}
+	</delete>
+
+</mapper> 
+    
