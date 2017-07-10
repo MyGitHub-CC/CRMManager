@@ -2,7 +2,7 @@ package entity;
 
 public class Status {
 	private int id;
-	private String status;
+	private String status2;
 
 	public int getId() {
 		return id;
@@ -12,17 +12,12 @@ public class Status {
 		this.id = id;
 	}
 
-	public String getStatus() {
-		return status;
+	public String getStatus2() {
+		return status2;
 	}
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	@Override
-	public String toString() {
-		return "Status [id=" + id + ", status=" + status + "]";
+	public void setStatus2(String status2) {
+		this.status2 = status2;
 	}
 
 }

@@ -2,7 +2,9 @@ package entity;
 
 public class Car {
 	private int id;
-	private String name;
+	private String brand;
+	private int sales;
+	private int inventory;
 
 	public int getId() {
 		return id;
@@ -12,17 +14,34 @@ public class Car {
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public String getBrand() {
+		return brand;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+
+	public int getSales() {
+		return sales;
+	}
+
+	public void setSales(int sales) {
+		this.sales = sales;
+	}
+
+	public int getInventory() {
+		return inventory;
+	}
+
+	public void setInventory(int inventory) {
+		this.inventory = inventory;
 	}
 
 	@Override
 	public String toString() {
-		return "Car [id=" + id + ", name=" + name + "]";
+		return "Car [id=" + id + ", brand=" + brand + ", sales=" + sales
+				+ ", inventory=" + inventory + "]";
 	}
 
 }

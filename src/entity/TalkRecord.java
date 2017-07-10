@@ -5,8 +5,8 @@ public class TalkRecord {
 	private int id;
 	private Customer customer;
 	private String dates;
-	private String method;
-	private String salesman;
+	private Way way;
+	private Salesman salesman;
 
 	public int getId() {
 		return id;
@@ -32,19 +32,19 @@ public class TalkRecord {
 		this.dates = dates;
 	}
 
-	public String getMethod() {
-		return method;
+	public Way getWay() {
+		return way;
 	}
 
-	public void setMethod(String method) {
-		this.method = method;
+	public void setWay(Way way) {
+		this.way = way;
 	}
 
-	public String getSalesman() {
+	public Salesman getSalesman() {
 		return salesman;
 	}
 
-	public void setSalesman(String salesman) {
+	public void setSalesman(Salesman salesman) {
 		this.salesman = salesman;
 	}
 

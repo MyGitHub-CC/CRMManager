@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.UserDao">
+
+	<select id="search" resultMap="search">
+		select * from  v_users_sales_rank limit #{begin},2
+	</select>
+	<resultMap type="entity.User" id="search">
+		<id property="id" column="id"></id>
+	<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
+			<result property="rank.id" column="rId"></result>
+			<result property="rank.rank" column="rank"></result>
+		</association>
+	</resultMap>
+
+	<select id="searchCount" resultType="int" >
+		select count(id) as n from users
+	</select>
+	
+	<select id="searchById" resultMap="searchById">
+		select * from  v_users_sales_rank where id = #{0}
+	</select>
+	<resultMap type="entity.User" id="searchById">
+		<id property="id" column="id"></id>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
+			<result property="rank.id" column="rId"></result>
+			<result property="rank.rank" column="rank"></result>
+		</association>
+	</resultMap>
+	
+	<select id="searchByCondition" resultMap="searchByCondition">
+		select u.id,sales.id as salId,sales.name from users as u inner join salesman as sales on u.sales_id = sales.id
+		 where name = #{salesman.name} and password=#{password}
+	</select>
+	<resultMap type="entity.User" id="searchByCondition" >
+		<id property="id" column="id" ></id>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="name"></result>
+		</association>
+	</resultMap>
+	
+	<insert id="insert" parameterType="entity.User"  >
+		insert into users (sales_id,password) values (#{salesman.id},'123')
+	</insert>
+	
+	<update id="update" parameterType="entity.User"  >
+		update salesman set r_id=#{salesman.rank.id}  where id =#{salesman.id}
+	</update>
+
+	<delete id="delete">
+		delete from users where id =#{0}
+	</delete>
+	
+</mapper> 
+    

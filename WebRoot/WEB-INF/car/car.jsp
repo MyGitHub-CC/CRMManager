@@ -8,7 +8,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <html>
 <head>
 	<base href="<%=basePath%>">
-	<title>客户信息管理</title>
+	<title>车辆信息管理</title>
 	<link rel="stylesheet" type="text/css" href="static/h-ui/css/H-ui.min.css" />
 	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/H-ui.admin.css" />
 	<link rel="stylesheet" type="text/css" href="lib/Hui-iconfont/1.0.8/iconfont.css" />
@@ -29,21 +29,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </head>
 
 <%
-	List<Customer> customers = (List<Customer>) request.getAttribute("customers");
-	List<Car> carList = (List<Car>) request.getAttribute("carList");
-	List<Status> status2List = (List<Status>) request.getAttribute("status2List");
-	List<Salesman> salesmanList = (List<Salesman>) request.getAttribute("salesmanList");
-	Customer conditonCustomer = new Customer();
-	if(request.getAttribute("customer") != null){
-		conditonCustomer = (Customer) request.getAttribute("conditonCustomer");
-	}
-	String name = "";
-	if(conditonCustomer.getName() != null){
-		name = conditonCustomer.getName();
-	}
+	List<Car> cars = (List<Car>) request.getAttribute("cars");
+// 	Car conditonCar = new Car();
+// 	if(request.getAttribute("car") != null){
+// 		conditonCar = (Car) request.getAttribute("conditonCar");
+// 	}
+// 	String name = "";
+// 	if(conditonCar.getBrand() != null){
+// 		name = conditonCar.getBrand();
+// 	}
 	int ye = (Integer) request.getAttribute("ye");
 	int maxPage = (Integer) request.getAttribute("maxPage");
-	List<String> ages = (List<String>) request.getAttribute("ages");
  %>
 <body>
 <nav class="breadcrumb">
@@ -60,9 +56,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		-
 		<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
 		<input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="customer-name" name="name" 
-		value="<%if(name != null){out.print(name);} %>" />
+		value="" />
 		<button type="submit" class="btn btn-success radius" id="select" name="">
-			<i class="Hui-iconfont">&#xe665;</i> 搜用户
+			<i class="Hui-iconfont">&#xe665;</i> 搜品牌
 		</button>
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"> 
@@ -70,6 +66,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<a href="javascript:;" id="deleteCustomers" class="btn btn-danger radius">
 				<i class="Hui-iconfont">&#xe6e2;</i> 批量删除
 			</a> 
+			<a href="javascript:;" id="addCar" class="btn btn-primary radius" data-toggle="modal" data-target="#myModal">
+				<i class="Hui-iconfont">&#xe600;</i> 添加品牌
+			</a>
 		</span> 
 		<span class="r">共有数据：<strong>88</strong> 条</span> 
 	</div>
@@ -79,48 +78,28 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<tr class="text-c">
 				<th width="25"><input type="checkbox" name="" value=""></th>
 				<th>序号</th>
-				<th>客户姓名</th>
-				<th>性别</th>
-				<th>年龄</th>
-				<th>职业</th>
-				<th>收入（元/月）</th>
-				<th>联系方式</th>
-				<th>意向车型</th>
-				<th>日期</th>
-				<th>状态</th>
-				<th>接待销售员</th>
-				<th>操作</th>			
+				<th>品牌名称</th>
+				<th>销售量</th>
+				<th>库存</th>
+				<th>操作</th>
 			</tr>
 		</thead>
 		<tbody>
-	<%
-			for(int i = 0; i < customers.size(); i++){
-				Customer customer = customers.get(i);
+		<%
+			for(int i = 0; i < cars.size(); i++){
+				Car car = cars.get(i);
 		%>
 			<tr class="text-c">
 				<td><input type="checkbox" value="1" name=""></td>
-				<td><%=customer.getId() %></td>
-				<td><%=customer.getName() %></td>
-				<td><%=customer.getSex() %></td>
-				<td><%=customer.getAge() %></td>
-				<td><%=customer.getWorks() %></td>
-				<td class="text-l"><%=customer.getIncome() %></td>
-				<td><%=customer.getPhone() %></td>
-				<td><%=customer.getCar().getBrand()%></td>
-				<td><%=customer.getDates() %></td>
-				<td class="td-status">
-					<span class="label label-success radius">
-					<%=customer.getStatus2().getStatus2() %>
-					</span>
-				</td>
-				<td class="td-status">
-					<%=customer.getSalesman().getName() %>
-				</td>
+				<td><%=car.getId() %></td>
+				<td><%=car.getBrand() %></td>
+				<td><%=car.getSales() %></td>
+				<td><%=car.getInventory() %></td>
 				<td class="td-manage">
-					<a style="text-decoration:none" href="javascript:;" class="ml-5 restore" data-cId="<%=customer.getId() %>" title="还原">
-						<i class="Hui-iconfont">&#xe66b;</i>
+					<a title="修改" href="javascript:;" class="ml-5 modify" style="text-decoration:none" data-cId="<%=car.getId() %>" data-toggle="modal" data-target="#myModal">
+						<i class="Hui-iconfont">&#xe6df;</i>
 					</a> 
-					<a title="删除" href="javascript:;" class="ml-5 delete" data-cId="<%=customer.getId() %>" style="text-decoration:none">
+					<a title="删除" href="javascript:;" class="ml-5 delete" data-cId="<%=car.getId() %>" style="text-decoration:none">
 						<i class="Hui-iconfont">&#xe6e2;</i>
 					</a>
 				</td>
@@ -135,8 +114,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	当前位于第  <%=ye %> 页，共  <%=maxPage %> 页
 </div>
 <div id="pageGro" class="cb">
-	<div class="pageBegin"><a class="customer-page-begin" href="customerDelete?ye=1&name=<%=name%>"> 首页</a></div>
-	<div class="pageUp"><a class="customer-page-pre" href="customerDelete?ye=<%=ye-1%>&name=<%=name%>"> 上一页</a></div>
+	<div class="pageBegin"><a class="customer-page-begin" href="car?ye=1"> 首页</a></div>
+	<div class="pageUp"><a class="customer-page-pre" href="car?ye=<%=ye-1%>"> 上一页</a></div>
     <div class="pageList">
        <ul class="pagination">
 			<%
@@ -152,15 +131,15 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				for(int i = begin; i <= end; i++){
 			 %>
 			 <li <%if (ye == i) {%>class="on" style="color:#fff;"<%} %> >
-				 <a href="customerDelete?ye=<%=i%>&name=<%=name%>" <%if (ye == i) {%>style="color:#fff;"<%} %>>
+				 <a href="car?ye=<%=i%>" <%if (ye == i) {%>style="color:#fff;"<%} %>>
 				 <%=i %>
 				 </a>
 			 </li>
 			<% } %>
 		</ul>
     </div>
-    <div class="pageDown"><a href="customerDelete?ye=<%=ye+1 %>&name=<%=name%>" > 下一页</a></div>
-    <div class="pageEnd"><a href="customerDelete?ye=<%=maxPage %>&name=<%=name%>" > 尾页</a></div>
+    <div class="pageDown"><a href="car?ye=<%=ye+1 %>" > 下一页</a></div>
+    <div class="pageEnd"><a href="car?ye=<%=maxPage %>" > 尾页</a></div>
 </div>
 
 <!-- 模态框（Modal） -->
@@ -168,7 +147,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title" id="myModalLabel">修改客户信息</h5>
+				<h5 class="modal-title" id="myModalLabel">客户信息</h5>
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
 					&times;
 				</button>
@@ -198,42 +177,101 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <script type="text/javascript">
 $(document).ready(function(){
-	$(".delete").click(function(){
+	$("#addCar").click(function(){
+		var tab = "<form > <input type='hidden' style='width:50px;' name='id' value='-1'>";
+		tab += "<table id='modify-table' class='table table-border table-bordered table-hover table-bg table-sort'><thead><tr class='text-c'>";
+		tab += "<th width='25'><input type='checkbox'></th><th>品牌</th><th>销售量</th><th>库存</th></tr></thead><tbody>";
+		tab += "<tr class='text-c'>";
+		tab += "<td><input type='checkbox' value='1'></td>";
+		tab += "<td><input type='text' style='width:70px;' name='brand'></td>";
+		tab += "<td><input type='hidden' style='width:70px;' name='sales' value='0'>" + 0 + "</td>";
+		tab += "<td><input type='text' style='width:70px;' name='inventory'></td>";
+		tab += "</tr></tbody></table>";
+		tab += "</form>";
+		$("#modal-body-table").html(tab);
+	});
+
+	$(".modify").click(function(){
 		var cId = $(this).attr("data-cId");
 		$.ajax({
 			type:"post",
-			url: "deletecustomerDelete",
+			url:"showModifyCar",
+			data:"cId=" + cId,
+			dataType:"json",
+			success:function(data){
+				var tab = "<form > ";
+				tab += "<table id='modify-table' class='table table-border table-bordered table-hover table-bg table-sort'><thead><tr class='text-c'>";
+				tab += "<th width='25'><input type='checkbox'></th><th>序号</th><th>品牌</th><th>销售量</th><th>库存</th></tr></thead><tbody>";
+				$.each(data,function(index, element){
+					tab += "<tr class='text-c'>";
+					tab += " <td><input type='checkbox' value='1'></td>";
+					tab += "<td><input type='hidden' style='width:50px;' name='id' value='" + element.id + "'>" + element.id + "</td>";
+					tab += "<td><input type='text' style='width:100px;' name='brand' value='" + element.brand + "'></td>";
+					tab += "<td><input type='text' style='width:100px;' name='sales' value='" + element.sales + "'></td>";
+					tab += "<td><input type='text' style='width:100px;' name='inventory' value='" + element.inventory + "'></td>";
+					tab += "</tr>";
+				});
+				tab += "</tbody></table>";
+				tab += "</form>";
+				$("#modal-body-table").html(tab);
+			}
+		});
+	});
+
+	$("#submit-customer").click(function(){
+		var id = $("[name=id]").val();
+		var obj;
+		if(id > 0){
+			obj = "modify";
+		}else{
+			obj = "add";
+		}
+		alert($("[name=sales]").val());
+		$.ajax({
+			type:"post",
+			url: obj + "Car",
+			data:$("form").serialize(),
+			dataType:"text",
+			success: function(data){
+				alert(data);
+				if(data == "保存成功"){
+					location.href="car";
+				}
+			}
+		});
+	});
+
+	$(".delete").click(function(){
+		var cId = $(this).attr("data-cId");
+		alert(cId);
+		$.ajax({
+			type:"post",
+			url: "deleteCar",
 			data:"cId=" + cId,
 			dataType:"text",
 			success: function(data){
 				alert(data);
 				if(data == "删除成功"){
-					location.href="customerDelete";
+					location.href="car";
 				}
 			}
 		});
 	});
-	
-	$(".restore").click(function(){
-		var cId = $(this).attr("data-cId");
-		alert(cId);
-		$.ajax({
-			type:"post",
-			url: "restorecustomerDelete",
-			data:"cId=" + cId,
-			dataType:"text",
-			success: function(data){
-				alert(data);
-				if(data == "还原成功"){
-					location.href="customerDelete";
-				}
-			}
-		});
-	});
-	
+
 	$("#select").click(function(){
 		var name = $("#customer-name").val();
-		window.location.href="customerDelete?name=" + name;
+		window.location.href="car?name=" + name;
+	});
+});
+
+$(function(){
+	$('.table-sort').dataTable({
+		"aaSorting": [[ 1, "desc" ]],//默认第几个排序
+		"bStateSave": true,//状态保存
+		"aoColumnDefs": [
+		  //{"bVisible": false, "aTargets": [ 3 ]} //控制列的隐藏显示
+		  {"orderable":false,"aTargets":[0,8,9]}// 制定列不参与排序
+		]
 	});
 });
 </script> 

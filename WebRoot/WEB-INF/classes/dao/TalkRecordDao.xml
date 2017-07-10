@@ -1,0 +1,80 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.TalkRecordDao">
+
+	<select id="search" resultMap="search" >
+		SELECT * FROM v_talk_cus_way_sta_sales where 1=1 
+		<if test="conditionTalk.customer != null and
+	 	conditionTalk.customer.name != null and conditionTalk.customer.name != '' ">
+			 and cusName like '%${conditionTalk.customer.name}%'
+		</if>
+		 limit #{begin},2
+	</select>
+	<resultMap type="entity.TalkRecord" id="search">
+		<id property="id" column="id"></id>
+		<result property="dates" column="dates"></result>
+		<association property="customer" column="cus_id"  javaType="entity.Customer">
+			<id property="id" column="cusId"></id>
+			<result property="name" column="cusName"></result>
+			<result property="status2.id" column="staId"></result>
+			<result property="status2.status2" column="status2"></result>
+		</association>
+		<association property="way" column="way_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
+		</association>
+	</resultMap>
+	
+	<select id="searchCount" resultType="int" >
+		select count(id) as n from v_talk_cus_way_sta_sales  where 1=1 
+		<if test="customer != null 
+		and customer.name != null and customer.name != '' ">
+			 and cusName like '%${customer.name}%'
+		</if>
+	</select>
+	
+	<select id="searchById" resultMap="searchById" >
+		SELECT * FROM v_talk_cus_way_sta_sales where id = #{0}
+	</select>
+	<resultMap type="entity.TalkRecord" id="searchById">
+		<id property="id" column="id"></id>
+		<result property="dates" column="dates"></result>
+		<association property="customer" column="cus_id"  javaType="entity.Customer">
+			<id property="id" column="cusId"></id>
+			<result property="name" column="cusName"></result>
+			<result property="status2.id" column="staId"></result>
+			<result property="status2.status2" column="status2"></result>
+		</association>
+		<association property="way" column="way_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
+		</association>
+	</resultMap>
+
+	<update id="update" parameterType="entity.TalkRecord"  >
+		update talk_record set cus_id=#{customer.id},dates=#{dates},way_id=#{way.id},
+		sta_id=#{customer.status2.id},sales_id=#{salesman.id}  where id =#{id}
+	</update>
+	
+	<insert id="insert" parameterType="entity.TalkRecord"  >
+		insert into talk_record (cus_id,dates,way_id,sta_id,sales_id) 
+		 values (#{customer.id},#{dates}, #{way.id}, #{customer.status2.id},#{salesman.id})
+	</insert>
+	
+	<delete id="delete" >
+		delete from talk_record where id = #{0}
+	</delete>
+	
+</mapper> 
+    

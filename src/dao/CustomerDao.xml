@@ -5,13 +5,35 @@
 
 <mapper namespace="dao.CustomerDao">
 
-	<select id="search" resultType="entity.Customer" >
-		select * from customer where 1=1 
+	<select id="search" resultMap="search" >
+		SELECT * FROM v_custpmer_ages_income_car_status2_salesman where 1=1 
 		<if test="customer.name != null and customer.name != '' ">
 			 and name like '%${customer.name}%'
 		</if>
 		 limit #{begin},2
 	</select>
+	<resultMap type="entity.Customer" id="search">
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="sex" column="sex"></result>
+		<result property="age" column="age"></result>
+		<result property="works" column="works"></result>
+		<result property="income" column="income"></result>
+		<result property="phone" column="phone"></result>
+		<result property="dates" column="dates"></result>
+		<association property="car" column="car_id"  javaType="entity.Car">
+			<id property="id" column="carId"></id>
+			<result property="brand" column="brand"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salesId"></id>
+			<result property="name" column="salesName"></result>
+		</association>
+		<association property="status2" column="sta_id"  javaType="entity.Status">
+			<id property="id" column="staId"></id>
+			<result property="status2" column="status2"></result>
+		</association>
+	</resultMap>
 	
 	<select id="searchCount" resultType="int" >
 		select count(id) as n from customer where 1=1 
@@ -20,18 +42,43 @@
 		</if>
 	</select>
 	
-	<select id="searchById" resultType="entity.Customer" >
-		select * from customer where id = #{0}
+	<select id="searchById" resultMap="searchById" >
+		SELECT * FROM v_custpmer_ages_income_car_status2_salesman where id = #{0}
 	</select>
+	<resultMap type="entity.Customer" id="searchById">
+		<id property="id" column="id"></id>
+		<result property="name" column="name"></result>
+		<result property="sex" column="sex"></result>
+		<result property="age" column="age"></result>
+		<result property="works" column="works"></result>
+		<result property="income" column="income"></result>
+		<result property="phone" column="phone"></result>
+		<result property="dates" column="dates"></result>
+		<association property="car" column="car_id"  javaType="entity.Car">
+			<id property="id" column="carId"></id>
+			<result property="brand" column="brand"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salesId"></id>
+			<result property="name" column="salesName"></result>
+		</association>
+		<association property="status2" column="sta_id"  javaType="entity.Status">
+			<id property="id" column="staId"></id>
+			<result property="status2" column="status2"></result>
+		</association>
+	</resultMap>
+	
 	
 	<insert id="insert" parameterType="entity.Customer"  >
-		insert into customer (name,sex,age,work,income,phone,models,dates,status) 
-		 values (#{name},#{sex}, #{age}, #{work},#{income}, #{phone},#{models},#{dates},#{status})
+		insert into customer (name,sex,age,works,income,phone,car_id,dates,sta_id,sales_id) 
+		 values (#{name},#{sex}, #{age}, #{works},#{income}, #{phone},#{car.id},#{dates}
+		 ,#{status2.id},#{salesman.id})
 	</insert>
 	
 	<update id="update" parameterType="entity.Customer"  >
-		update customer set name=#{name},sex=#{sex}, age=#{age},work=#{work},income=#{income},
-		phone=#{phone},models=#{models},dates=#{dates},status=#{status} where id =#{id}
+		update customer set name=#{name},sex=#{sex}, age=#{age},works=#{works},income=#{income},
+		phone=#{phone},car_id=#{car.id},dates=#{dates},sta_id=#{status2.id},
+		sales_id=#{salesman.id}  where id =#{id}
 	</update>
 	
 	<delete id="delete">

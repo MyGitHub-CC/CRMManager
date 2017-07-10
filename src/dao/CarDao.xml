@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC   
+    "-//mybatis.org//DTD Mapper 3.0//EN"  
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="dao.CarDao">
+
+	<select id="searchAll" resultType="entity.Car">
+		select * from car
+	</select>
+
+	<select id="search" resultType="entity.Car">
+		select * from car limit #{begin},2
+	</select>
+
+	<select id="searchCount" resultType="int" >
+		select count(id) as n from car
+	</select>
+	
+	<select id="searchById" resultType="entity.Car">
+		select * from car where id = #{0}
+	</select>
+	
+	<insert id="insert" parameterType="entity.Car"  >
+		insert into car (brand,sales,inventory) values (#{brand},#{sales},#{inventory})
+	</insert>
+	
+	<update id="update" parameterType="entity.Car"  >
+		update car set brand=#{brand},sales=#{sales},inventory=#{inventory}  where id =#{id}
+	</update>
+
+	<delete id="delete">
+		delete from car where id =#{0}
+	</delete>
+	
+</mapper> 
+    
