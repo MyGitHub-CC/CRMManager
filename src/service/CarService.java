@@ -8,9 +8,9 @@ public interface CarService {
 
 	public List<Car> searchAll();
 
-	public List<Car> search(int begin);
+	public List<Car> search(int begin,Car car);
 	
-	public int searchCount();
+	public int searchCount(Car car);
 
 	public int add(Car car);
 

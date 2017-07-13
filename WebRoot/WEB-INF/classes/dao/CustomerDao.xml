@@ -6,11 +6,12 @@
 <mapper namespace="dao.CustomerDao">
 
 	<select id="search" resultMap="search" >
-		SELECT * FROM v_custpmer_ages_income_car_status2_salesman where 1=1 
+		SELECT * FROM v_cus_ages_inc_car_sta_sales_way where 1=1 
 		<if test="customer.name != null and customer.name != '' ">
 			 and name like '%${customer.name}%'
 		</if>
-		 limit #{begin},2
+			 and del = #{del}
+		 limit #{begin},5
 	</select>
 	<resultMap type="entity.Customer" id="search">
 		<id property="id" column="id"></id>
@@ -33,17 +34,22 @@
 			<id property="id" column="staId"></id>
 			<result property="status2" column="status2"></result>
 		</association>
+		<association property="way" column="w_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
 	</resultMap>
 	
 	<select id="searchCount" resultType="int" >
 		select count(id) as n from customer where 1=1 
-		<if test="name != null and name != '' ">
-			 and name like '%${name}%'
+		<if test="customer.name != null and customer.name != '' ">
+			 and name like '%${customer.name}%'
 		</if>
+		  and del = #{del}
 	</select>
 	
 	<select id="searchById" resultMap="searchById" >
-		SELECT * FROM v_custpmer_ages_income_car_status2_salesman where id = #{0}
+		SELECT * FROM v_cus_ages_inc_car_sta_sales_way where id = #{0} and del = #{1}
 	</select>
 	<resultMap type="entity.Customer" id="searchById">
 		<id property="id" column="id"></id>
@@ -66,24 +72,37 @@
 			<id property="id" column="staId"></id>
 			<result property="status2" column="status2"></result>
 		</association>
+		<association property="way" column="w_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
 	</resultMap>
 	
 	
-	<insert id="insert" parameterType="entity.Customer"  >
-		insert into customer (name,sex,age,works,income,phone,car_id,dates,sta_id,sales_id) 
-		 values (#{name},#{sex}, #{age}, #{works},#{income}, #{phone},#{car.id},#{dates}
-		 ,#{status2.id},#{salesman.id})
+	<insert id="insert" parameterType="entity.Customer" useGeneratedKeys="true" keyProperty="id">
+		insert into customer (name,sex,age,works,income,phone,car_id,sta_id,sales_id,w_id,del) 
+		 values (#{name},#{sex}, #{age}, #{works},#{income}, #{phone},#{car.id}
+		 ,#{status2.id},#{salesman.id},#{way.id},0)
 	</insert>
 	
 	<update id="update" parameterType="entity.Customer"  >
 		update customer set name=#{name},sex=#{sex}, age=#{age},works=#{works},income=#{income},
-		phone=#{phone},car_id=#{car.id},dates=#{dates},sta_id=#{status2.id},
-		sales_id=#{salesman.id}  where id =#{id}
+		phone=#{phone},car_id=#{car.id},sta_id=#{status2.id},
+		sales_id=#{salesman.id},w_id=#{way.id}  where id =#{id}
+	</update>
+	
+	<update id="deleteUpdate">
+		update customer set del = #{1} where id = #{0}
 	</update>
 	
 	<delete id="delete">
-		delete from customer where id =#{0}
+		delete from customer  where id = #{0}
 	</delete>
+	
+	<update id="updateTalkRecord" parameterType="entity.TalkRecord"  >
+		update customer set w_id=#{way.id}, sta_id =#{customer.status2.id},
+		sales_id=#{salesman.id} where id =#{customer.id}
+	</update>
 
 </mapper> 
     

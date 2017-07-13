@@ -6,7 +6,7 @@
 <mapper namespace="dao.UserDao">
 
 	<select id="search" resultMap="search">
-		select * from  v_users_sales_rank limit #{begin},2
+		select * from  v_users_sales_rank limit #{begin},5
 	</select>
 	<resultMap type="entity.User" id="search">
 		<id property="id" column="id"></id>

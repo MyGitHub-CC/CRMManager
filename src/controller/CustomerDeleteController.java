@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import service.CarService;
-import service.CustomerDeleteService;
 import service.CustomerService;
 import service.SalesmanService;
 import service.StatusService;
@@ -26,8 +25,6 @@ import entity.Status;
 public class CustomerDeleteController {
 
 	@Autowired
-	CustomerDeleteService cdService;
-	@Autowired
 	CustomerService customerService;
 	@Autowired
 	CarService carService;
@@ -39,16 +36,17 @@ public class CustomerDeleteController {
 	@RequestMapping(value="customerDelete", method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView customerDelete(Integer ye,Customer conditonCustomer) {
 		ModelAndView mv = new ModelAndView("customer/customerDelete");
-		int count = customerService.searchCount(conditonCustomer);
-		int maxPage =  (count - 1) / 2 + 1;
+		int del = 1;
+		int count = customerService.searchCount(conditonCustomer,del);
+		int maxPage =  (count - 1) / 5 + 1;
 		if (ye == null || ye < 1) {
 			ye = 1;
 		}
 		if (ye > maxPage) {
 			ye = maxPage;
 		}
-		int begin = (ye - 1) * 2;
-		List<Customer> customers =  cdService.search(begin,conditonCustomer);
+		int begin = (ye - 1) * 5;
+		List<Customer> customers =  customerService.search(begin,conditonCustomer,del);
 		List<Car> carList = carService.searchAll();
 		List<Status> status2List = statusService.searchAll();
 		List<Salesman> salesmanList = salesmanService.searchAll();
@@ -64,7 +62,7 @@ public class CustomerDeleteController {
 	
 	@RequestMapping(value="deletecustomerDelete", method={RequestMethod.POST,RequestMethod.GET})
 	public void deletecustomerDelete(int cId,HttpServletResponse response) {
-		int result =  cdService.delete(cId);
+		int result =  customerService.delete(cId);
 		try {
 			PrintWriter out = response.getWriter();
 			if (result > 0) {
@@ -79,12 +77,8 @@ public class CustomerDeleteController {
 	
 	@RequestMapping(value="restorecustomerDelete", method={RequestMethod.POST,RequestMethod.GET})
 	public void restorecustomerDelete(int cId,HttpServletResponse response) {
-		Customer customer = cdService.searchById(cId);
-		int addResult = customerService.add(customer);
-		int result = 0;
-		if (addResult > 0) {
-			result = cdService.delete(cId);
-		}
+		int del = 0;
+		int result = customerService.deleteUpdate(cId,del);
 		try {
 			PrintWriter out = response.getWriter();
 			if (result > 0) {

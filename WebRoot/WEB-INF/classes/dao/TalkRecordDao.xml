@@ -6,12 +6,14 @@
 <mapper namespace="dao.TalkRecordDao">
 
 	<select id="search" resultMap="search" >
-		SELECT * FROM v_talk_cus_way_sta_sales where 1=1 
-		<if test="conditionTalk.customer != null and
-	 	conditionTalk.customer.name != null and conditionTalk.customer.name != '' ">
+		SELECT * FROM  v_talk_cus_way_sta_sales_eval where 1=1 
+		<if test="conditionTalk.customer.name != null and conditionTalk.customer.name != '' ">
 			 and cusName like '%${conditionTalk.customer.name}%'
 		</if>
-		 limit #{begin},2
+		<if test="conditionTalk.customer.id > 0 ">
+			 and cusId = #{conditionTalk.customer.id}
+		</if>
+		 limit #{begin},5
 	</select>
 	<resultMap type="entity.TalkRecord" id="search">
 		<id property="id" column="id"></id>
@@ -30,18 +32,24 @@
 			<id property="id" column="salId"></id>
 			<result property="name" column="salName"></result>
 		</association>
+		<association property="eval" column="ev_id"  javaType="entity.Eval">
+			<id property="id" column="evId"></id>
+			<result property="eval" column="eval"></result>
+		</association>
 	</resultMap>
 	
 	<select id="searchCount" resultType="int" >
-		select count(id) as n from v_talk_cus_way_sta_sales  where 1=1 
-		<if test="customer != null 
-		and customer.name != null and customer.name != '' ">
+		select count(id) as n from v_talk_cus_way_sta_sales_eval  where 1=1 
+		<if test="customer.name != null and customer.name != '' ">
 			 and cusName like '%${customer.name}%'
+		</if>
+		<if test="customer.id > 0 ">
+			 and cusId = #{customer.id}
 		</if>
 	</select>
 	
 	<select id="searchById" resultMap="searchById" >
-		SELECT * FROM v_talk_cus_way_sta_sales where id = #{0}
+		SELECT * FROM v_talk_cus_way_sta_sales_eval where id = #{0}
 	</select>
 	<resultMap type="entity.TalkRecord" id="searchById">
 		<id property="id" column="id"></id>
@@ -60,21 +68,83 @@
 			<id property="id" column="salId"></id>
 			<result property="name" column="salName"></result>
 		</association>
+		<association property="eval" column="ev_id"  javaType="entity.Eval">
+			<id property="id" column="evId"></id>
+			<result property="eval" column="eval"></result>
+		</association>
 	</resultMap>
-
+	
 	<update id="update" parameterType="entity.TalkRecord"  >
-		update talk_record set cus_id=#{customer.id},dates=#{dates},way_id=#{way.id},
+		update talk_record set cus_id=#{customer.id},way_id=#{way.id},
 		sta_id=#{customer.status2.id},sales_id=#{salesman.id}  where id =#{id}
 	</update>
 	
 	<insert id="insert" parameterType="entity.TalkRecord"  >
-		insert into talk_record (cus_id,dates,way_id,sta_id,sales_id) 
-		 values (#{customer.id},#{dates}, #{way.id}, #{customer.status2.id},#{salesman.id})
+		insert into talk_record (cus_id,way_id,sta_id,sales_id,ev_id) 
+		 values (#{customer.id}, #{way.id}, #{customer.status2.id},#{salesman.id},1)
 	</insert>
 	
-	<delete id="delete" >
-		delete from talk_record where id = #{0}
+	<delete id="delete" parameterType="entity.TalkRecord">
+		delete from talk_record where id = #{id}
 	</delete>
+	
+	<select id="searchBySupervision" resultMap="search" >
+		SELECT * FROM v_talk_cus_way_sta_sales_eval where 1=1 
+		 ORDER BY  RAND() LIMIT 2
+	</select>
+	<resultMap type="entity.TalkRecord" id="searchBySupervision">
+		<id property="id" column="id"></id>
+		<result property="dates" column="dates"></result>
+		<association property="customer" column="cus_id"  javaType="entity.Customer">
+			<id property="id" column="cusId"></id>
+			<result property="name" column="cusName"></result>
+			<result property="status2.id" column="staId"></result>
+			<result property="status2.status2" column="status2"></result>
+		</association>
+		<association property="way" column="way_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
+		</association>
+		<association property="eval" column="ev_id"  javaType="entity.Eval">
+			<id property="id" column="evId"></id>
+			<result property="eval" column="eval"></result>
+		</association>
+	</resultMap>
+	
+	<update id="addModify" parameterType="entity.TalkRecord"  >
+		update talk_record set ev_id=#{eval.id}  where id =#{id}
+	</update>
+	
+	<select id="searchMaxCId" resultMap="searchMaxCId" >
+		SELECT * FROM v_talk_cus_way_sta_sales_eval where id = 
+		(SELECT max(id) FROM talk_record WHERE cus_id =#{customer.id})
+	</select>
+	<resultMap type="entity.TalkRecord" id="searchMaxCId">
+		<id property="id" column="id"></id>
+		<result property="dates" column="dates"></result>
+		<association property="customer" column="cus_id"  javaType="entity.Customer">
+			<id property="id" column="cusId"></id>
+			<result property="name" column="cusName"></result>
+			<result property="status2.id" column="staId"></result>
+			<result property="status2.status2" column="status2"></result>
+		</association>
+		<association property="way" column="way_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
+		</association>
+		<association property="eval" column="ev_id"  javaType="entity.Eval">
+			<id property="id" column="evId"></id>
+			<result property="eval" column="eval"></result>
+		</association>
+	</resultMap>
 	
 </mapper> 
     

@@ -16,42 +16,35 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
 </head>
 <%
-// 	User user = (User)session.getAttribute("user");
-// 	Salesman salesman = user.getSalesman();
+	User user = new User();
+	Salesman salesman = new Salesman();
+	if(session.getAttribute("user") != null){
+		user =	(User)session.getAttribute("user");
+		salesman = user.getSalesman();
+	}
+	user.setSalesman(salesman);
  %>
 <body>
 <header class="navbar-wrapper">
 	<div class="navbar navbar-fixed-top">
-		<div class="container-fluid cl"> <a class="logo navbar-logo f-l mr-10 hidden-xs" href="/aboutHui.shtml">H-ui.admin</a> <a class="logo navbar-logo-m f-l mr-10 visible-xs" href="/aboutHui.shtml">H-ui</a> 
-			<span class="logo navbar-slogan f-l mr-10 hidden-xs">v3.0</span> 
-			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
-			<nav class="nav navbar-nav">
-				<ul class="cl">
-					<li class="dropDown dropDown_hover"><a href="javascript:;" class="dropDown_A"><i class="Hui-iconfont">&#xe600;</i> 新增 <i class="Hui-iconfont">&#xe6d5;</i></a>
-						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;" onclick="article_add('添加资讯','article-add.html')"><i class="Hui-iconfont">&#xe616;</i> 资讯</a></li>
-							<li><a href="javascript:;" onclick="picture_add('添加资讯','picture-add.html')"><i class="Hui-iconfont">&#xe613;</i> 图片</a></li>
-							<li><a href="javascript:;" onclick="product_add('添加资讯','product-add.html')"><i class="Hui-iconfont">&#xe620;</i> 产品</a></li>
-							<li><a href="javascript:;" onclick="member_add('添加用户','member-add.html','','510')"><i class="Hui-iconfont">&#xe60d;</i> 用户</a></li>
-						</ul>
-						<li class="navbar-levelone current"><a href="javascript:;">平台</a></li>
-						<li class="navbar-levelone"><a href="javascript:;">商城</a></li>
-						<li class="navbar-levelone"><a href="javascript:;">财务</a></li>
-						<li class="navbar-levelone"><a href="javascript:;">手机</a></li>
-					</li>
-				</ul>
-			</nav>
+		<div class="container-fluid cl" style="padding-left:60px;"> 
+			<img src="images/logo.png" style="float:left;width:38px;height:38px;margin-top:3px;margin-right:20px;" />
+			<a class="logo navbar-logo f-l mr-10 hidden-xs" >
+				CRM客户管理系统
+			</a> 
 			<nav id="Hui-userbar" class="nav navbar-nav navbar-userbar hidden-xs">
 				<ul class="cl">
-					<li>超级管理员</li>
+					<li>当前用户：</li>
 					<li class="dropDown dropDown_hover">
-						<a href="#" class="dropDown_A">admin <i class="Hui-iconfont">&#xe6d5;</i></a>
+						<a href="#" class="dropDown_A"><%=salesman.getName() %>
+							<i class="Hui-iconfont">&#xe6d5;</i>
+						</a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="javascript:;" onClick="myselfinfo()">个人信息</a></li>
+							<li><a href="search-info">个人信息</a></li>
 							<li><a href="#">切换账户</a></li>
-							<li><a href="#">退出</a></li>
-					</ul>
-				</li>
+							<li><a href="exit">退出</a></li>
+						</ul>
+					</li>
 					<li id="Hui-msg"> <a href="#" title="消息"><span class="badge badge-danger">1</span><i class="Hui-iconfont" style="font-size:18px">&#xe68a;</i></a> </li>
 					<li id="Hui-skin" class="dropDown right dropDown_hover"> <a href="javascript:;" class="dropDown_A" title="换肤"><i class="Hui-iconfont" style="font-size:18px">&#xe62a;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -75,8 +68,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<dd>
 				<ul>
 					<li><a data-href="customer" data-title="客户信息" href="javascript:;">客户信息</a></li>
+					<li><a data-href="showAddCustomer" data-title="添加客户" href="javascript:;">添加客户</a></li>
+					<li><a data-href="talkRecord" data-title="交流记录" href="javascript:;">客户交流记录</a></li>
 					<li><a data-href="customerDelete" data-title="删除的客户" href="javascript:;">删除的客户</a></li>
-					<li><a data-href="customerTalk" data-title="客户交流记录" href="javascript:;">客户交流记录</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -91,11 +85,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</dd>
 		</dl>
 		<dl id="menu-admin">
-			<dt><i class="Hui-iconfont">&#xe62d;</i> 用户管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
+			<dt><i class="Hui-iconfont">&#xe62d;</i> 员工管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
 				<ul>
 					<li><a data-href="user" data-title="角色管理" href="javascript:void(0)">用户信息</a></li>
-					<li><a data-href="userModify" data-title="权限管理" href="javascript:void(0)">权限管理</a></li>
+					<li><a data-href="salesman" data-title="员工管理" href="javascript:void(0)">员工管理</a></li>
 					<li><a data-href="userSuper" data-title="管理员列表" href="javascript:void(0)">超级管理员</a></li>
 				</ul>
 			</dd>
@@ -215,52 +209,6 @@ $(function(){
 		index:0,
 	});
 });
-/*个人信息*/
-function myselfinfo(){
-	layer.open({
-		type: 1,
-		area: ['300px','200px'],
-		fix: false, //不固定
-		maxmin: true,
-		shade:0.4,
-		title: '查看信息',
-		content: '<div>管理员信息</div>'
-	});
-}
-
-/*资讯-添加*/
-function article_add(title,url){
-	var index = layer.open({
-		type: 2,
-		title: title,
-		content: url
-	});
-	layer.full(index);
-}
-/*图片-添加*/
-function picture_add(title,url){
-	var index = layer.open({
-		type: 2,
-		title: title,
-		content: url
-	});
-	layer.full(index);
-}
-/*产品-添加*/
-function product_add(title,url){
-	var index = layer.open({
-		type: 2,
-		title: title,
-		content: url
-	});
-	layer.full(index);
-}
-/*用户-添加*/
-function member_add(title,url,w,h){
-	layer_show(title,url,w,h);
-}
-
-
 </script> 
 
   </body>

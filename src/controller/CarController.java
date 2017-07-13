@@ -24,19 +24,20 @@ public class CarController {
 	CarService carService;
 	
 	@RequestMapping(value="car", method={RequestMethod.POST,RequestMethod.GET})
-	public ModelAndView car(Integer ye) {
+	public ModelAndView car(Integer ye,Car conditonCar) {
 		ModelAndView mv = new ModelAndView("car/car");
-		int count = carService.searchCount();
-		int maxPage =  (count - 1) / 2 + 1;
+		int count = carService.searchCount(conditonCar);
+		int maxPage =  (count - 1) / 5 + 1;
 		if (ye == null || ye < 1) {
 			ye = 1;
 		}
 		if (ye > maxPage) {
 			ye = maxPage;
 		}
-		int begin = (ye - 1) * 2;
-		List<Car> cars =  carService.search(begin);
+		int begin = (ye - 1) * 5;
+		List<Car> cars =  carService.search(begin,conditonCar);
 		mv.addObject("cars", cars);
+		mv.addObject("conditonCar", conditonCar);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("ye", ye);
 		return mv;

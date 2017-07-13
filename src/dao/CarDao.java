@@ -10,9 +10,10 @@ public interface CarDao {
 
 	public List<Car> searchAll();
 
-	public List<Car> search(@Param(value="begin")int begin);
+	public List<Car> search(@Param(value="begin")int begin,
+			@Param(value="car")Car car);
 	
-	public int searchCount();
+	public int searchCount(Car car);
 
 	public int insert(Car car);
 

@@ -10,6 +10,7 @@ public class Customer {
 	private String phone;
 	private Car car;
 	private String dates;
+	private Way way;
 	private Status status2;
 	private Salesman salesman;
 
@@ -101,12 +102,21 @@ public class Customer {
 		this.salesman = salesman;
 	}
 
+	public Way getWay() {
+		return way;
+	}
+
+	public void setWay(Way way) {
+		this.way = way;
+	}
+
 	@Override
 	public String toString() {
 		return "Customer [id=" + id + ", name=" + name + ", sex=" + sex
 				+ ", age=" + age + ", works=" + works + ", income=" + income
 				+ ", phone=" + phone + ", car=" + car + ", dates=" + dates
-				+ ", status2=" + status2 + ", salesman=" + salesman + "]";
+				+ ", way=" + way + ", status2=" + status2 + ", salesman="
+				+ salesman + "]";
 	}
 
 }

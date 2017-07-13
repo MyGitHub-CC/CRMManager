@@ -17,7 +17,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<style type="text/css" media="screen">
 	/* CSS Document */
 	/*分页*/
-	#pageGro{ width:400px; height:25px; float:right;}
+	#pageGro{ height:25px; float:right;margin-right:20px;}
 	#pageGro div,#pageGro div ul li{ font-size:12px; color:#666; line-height:26px; float:left; margin-left:5px;}
 	#pageGro div ul li{ width:22px; text-align:center; border:1px solid #ccc; cursor:pointer;}
 	#pageGro div ul li.on{ color:#fff; background:#3c90d9; border:1px solid #3c90d9;}
@@ -259,7 +259,7 @@ $("#submit-customer").click(function(){
 	}else{
 		obj = "add";
 	}
-	alert(obj);
+	//alert(obj);
 	$.ajax({
 		type:"post",
 		url: obj + "User",
@@ -276,7 +276,7 @@ $("#submit-customer").click(function(){
 
 $(".delete").click(function(){
 	var uId = $(this).attr("data-uId");
-	alert(uId);
+	//alert(uId);
 	$.ajax({
 		type:"post",
 		url: "deleteUser",

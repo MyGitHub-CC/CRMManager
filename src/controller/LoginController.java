@@ -61,7 +61,11 @@ public class LoginController {
 			out.print("登录失败！");
 		}
 	}
-	
 
+	@RequestMapping(value="exit", method={RequestMethod.POST,RequestMethod.GET})
+	public String exit(HttpServletRequest request) {
+		request.getSession().setAttribute("user", null);
+		return  "redirect:login ";
+	}
 	
 }

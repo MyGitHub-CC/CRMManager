@@ -8753,7 +8753,7 @@ a.logo:hover {
 }
 
 .navbar-logo,.navbar-logo-m {
-	font-size: 16px
+	font-size: 18px
 }
 
 .navbar-slogan {
@@ -10888,7 +10888,6 @@ a.label:hover,a.label:focus,a.badge:hover,a.badge:focus {
 }
 
 .footer {
-	border-top: 1px solid #e8e8e8;
 	padding: 15px 0;
 	font-family: tahoma, Arial;
 	font-size: 12px;

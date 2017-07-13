@@ -15,45 +15,47 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import service.CarService;
-import service.CustomerDeleteService;
 import service.CustomerService;
 import service.SalesmanService;
 import service.StatusService;
+import service.WayService;
 import entity.Car;
 import entity.Customer;
 import entity.Salesman;
 import entity.Status;
+import entity.Way;
 
 @Controller
 public class CustomerController {
-
 	@Autowired
 	CustomerService customerService;
-	@Autowired
-	CustomerDeleteService cdService;
 	@Autowired
 	CarService carService;
 	@Autowired
 	StatusService statusService;
 	@Autowired
 	SalesmanService salesmanService;
+	@Autowired
+	WayService wayService;
 	
 	@RequestMapping(value="customer", method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView customer(Integer ye,Customer conditonCustomer) {
 		ModelAndView mv = new ModelAndView("customer/customer");
-		int count = customerService.searchCount(conditonCustomer);
-		int maxPage =  (count - 1) / 2 + 1;
+		int del = 0;
+		int count = customerService.searchCount(conditonCustomer,del);
+		int maxPage =  (count - 1) / 5 + 1;
 		if (ye == null || ye < 1) {
 			ye = 1;
 		}
 		if (ye > maxPage) {
 			ye = maxPage;
 		}
-		int begin = (ye - 1) * 2;
-		List<Customer> customers =  customerService.search(begin,conditonCustomer);
+		int begin = (ye - 1) * 5;
+		List<Customer> customers =  customerService.search(begin,conditonCustomer,del);
 		List<Car> carList = carService.searchAll();
 		List<Status> status2List = statusService.searchAll();
 		List<Salesman> salesmanList = salesmanService.searchAll();
+		List<Way> wayList = wayService.searchAll();
 		mv.addObject("customers", customers);
 		mv.addObject("conditonCustomer", conditonCustomer);
 		mv.addObject("maxPage", maxPage);
@@ -61,6 +63,21 @@ public class CustomerController {
 		mv.addObject("carList", carList);
 		mv.addObject("status2List", status2List);
 		mv.addObject("salesmanList", salesmanList);
+		mv.addObject("wayList", wayList);
+		return mv;
+	}
+	
+	@RequestMapping(value="showAddCustomer", method={RequestMethod.POST,RequestMethod.GET})
+	public ModelAndView showAddCustomer() {
+		ModelAndView mv = new ModelAndView("customer/addCustomer");
+		List<Car> carList = carService.searchAll();
+		List<Status> status2List = statusService.searchAll();
+		List<Salesman> salesmanList = salesmanService.searchAll();
+		List<Way> wayList = wayService.searchAll();
+		mv.addObject("carList", carList);
+		mv.addObject("status2List", status2List);
+		mv.addObject("salesmanList", salesmanList);
+		mv.addObject("wayList", wayList);
 		return mv;
 	}
 	
@@ -82,7 +99,7 @@ public class CustomerController {
 	@RequestMapping(value="showModifyCustomer", method={RequestMethod.POST,RequestMethod.GET})
 	public void showModifyCustomer(int cId, HttpServletResponse response) {
 		response.setContentType("text/html;charset=utf-8");
-		Customer customer = customerService.searchById(cId);
+		Customer customer = customerService.searchById(cId,0);
 		if (customer != null) {
 			try {
 				PrintWriter out = response.getWriter();
@@ -112,12 +129,8 @@ public class CustomerController {
 	
 	@RequestMapping(value="deleteCustomer", method={RequestMethod.POST,RequestMethod.GET})
 	public void deleteCustomer(int cId,HttpServletResponse response) {
-		Customer customer = customerService.searchById(cId);
-		int addResult = cdService.add(customer);
-		int result = 0;
-		if (addResult > 0) {
-			result = customerService.delete(cId);
-		}
+		int del = 1;
+		int result = customerService.deleteUpdate(cId,del);
 		try {
 			PrintWriter out = response.getWriter();
 			if (result > 0) {

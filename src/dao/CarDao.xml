@@ -10,11 +10,18 @@
 	</select>
 
 	<select id="search" resultType="entity.Car">
-		select * from car limit #{begin},2
+		select * from car where 1=1 
+		<if test="car.brand != null and car.brand != '' ">
+			 and brand like '%${car.brand}%' 
+		</if>
+		limit #{begin},5
 	</select>
 
 	<select id="searchCount" resultType="int" >
-		select count(id) as n from car
+		select count(id) as n from car where 1=1 
+		<if test="brand != null and brand != '' ">
+			 and brand like '%${brand}%' 
+		</if>
 	</select>
 	
 	<select id="searchById" resultType="entity.Car">

@@ -19,6 +19,12 @@ public interface TalkRecordDao {
 
 	public int insert(TalkRecord talkRecord);
 
-	public int delete(int tId);
+	public int delete(TalkRecord talkRecord);
+
+	public List<TalkRecord> searchBySupervision();
+
+	public int addModify(TalkRecord talkRecord);
+
+	public TalkRecord searchMaxCId(int cId);
 
 }

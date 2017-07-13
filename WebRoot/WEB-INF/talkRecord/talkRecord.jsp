@@ -3,7 +3,6 @@
 String path = request.getContextPath();
 String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
-
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
@@ -17,7 +16,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<style type="text/css" media="screen">
 	/* CSS Document */
 	/*分页*/
-	#pageGro{ width:400px; height:25px; float:right;}
+	#pageGro{ height:25px; float:right;margin-right:20px;}
 	#pageGro div,#pageGro div ul li{ font-size:12px; color:#666; line-height:26px; float:left; margin-left:5px;}
 	#pageGro div ul li{ width:22px; text-align:center; border:1px solid #ccc; cursor:pointer;}
 	#pageGro div ul li.on{ color:#fff; background:#3c90d9; border:1px solid #3c90d9;}
@@ -34,13 +33,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	List<Status> status2List = (List<Status>) request.getAttribute("status2List");
 	List<Salesman> salesmanList = (List<Salesman>) request.getAttribute("salesmanList");
 	List<Way> wayList = (List<Way>) request.getAttribute("wayList");
-	TalkRecord conditonTalk = new TalkRecord();
-	if(request.getAttribute("conditonTalk") != null){
-		conditonTalk = (TalkRecord) request.getAttribute("conditonTalk");
+	TalkRecord conditionTalk = new TalkRecord();
+	if(request.getAttribute("conditionTalk") != null){
+		conditionTalk = (TalkRecord) request.getAttribute("conditionTalk");
 	}
 	String name = "";
-	if(conditonTalk.getCustomer().getName() != null){
-		name = conditonTalk.getCustomer().getName();
+	if(conditionTalk.getCustomer().getName() != null){
+		name = conditionTalk.getCustomer().getName();
+	}
+	int cId = 0;
+	if(conditionTalk.getCustomer().getId() > 0){
+		cId = conditionTalk.getCustomer().getId();
 	}
 	int ye = (Integer) request.getAttribute("ye");
 	int maxPage = (Integer) request.getAttribute("maxPage");
@@ -55,14 +58,12 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	</a>
 </nav>
 <div class="page-container">
-	<div class="text-c"> 日期范围：
-		<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
-		-
-		<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
-		<input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="customer-name" name="name" 
-		value="<%if(conditonTalk.getCustomer().getName() != null){out.print(conditonTalk.getCustomer().getName());} %>" />
+	<div class="text-c">
+		<input type="text" class="input-text" style="width:250px" id="customer-name" name="name" 
+		value="<%if(conditionTalk.getCustomer().getName() != null)
+		{out.print(conditionTalk.getCustomer().getName());} %>" />
 		<button type="submit" class="btn btn-success radius" id="select">
-			<i class="Hui-iconfont">&#xe665;</i> 搜用户
+			<i class="Hui-iconfont">&#xe665;</i> 搜索
 		</button>
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"> 
@@ -70,7 +71,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<a href="javascript:;" id="deleteTalkRecords" class="btn btn-danger radius">
 				<i class="Hui-iconfont">&#xe6e2;</i> 批量删除
 			</a> 
-			<a href="javascript:;" id=addTalkRecord class="btn btn-primary radius" data-toggle="modal" data-target="#myModal">
+			<a href="javascript:;" id="addTalkRecord" class="btn btn-primary radius" data-toggle="modal" data-target="#myModal">
 				<i class="Hui-iconfont">&#xe600;</i> 添加交流记录
 			</a>
 		</span> 
@@ -83,11 +84,11 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<th width="25"><input type="checkbox" name="" value=""></th>
 				<th>序号</th>
 				<th>客户姓名</th>
-				<th>交流时间</th>
 				<th>交流方式</th>
-				<th>状态</th>
-				<th>接待销售员</th>
+				<th>交流时间</th>
+				<th style="width:130px">状态</th>
 				<th>备注</th>
+				<th>接待销售员</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -96,22 +97,26 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			for(int i = 0; i < talkRecords.size(); i++){
 				TalkRecord talkRecord = talkRecords.get(i);
 		%>
-			<tr class="text-c" data-id="<%=talkRecord.getId() %>" >
+			<tr class="text-c"  data-tId="<%=talkRecord.getId() %>" data-cId="<%=talkRecord.getCustomer().getId() %>" >
 				<td><input type="checkbox" value="1" name=""></td>
 				<td><%=talkRecord.getId() %></td>
 				<td><%=talkRecord.getCustomer().getName() %></td>
-				<td><%=talkRecord.getDates() %></td>
 				<td><%=talkRecord.getWay().getWay() %></td>
-				<td><%=talkRecord.getCustomer().getStatus2().getStatus2() %></td>
-				<td><%=talkRecord.getSalesman().getName() %></td>
+				<td><%=talkRecord.getDates() %></td>
+				<td >
+					<span class="label label-success radius">
+						<%=talkRecord.getCustomer().getStatus2().getStatus2() %>
+					</span>
+				</td>
 				<td>
 					33
 				</td>
+				<td><%=talkRecord.getSalesman().getName() %></td>
 				<td class="td-manage">
-					<a title="修改" href="javascript:;" class="ml-5 modify" style="text-decoration:none" data-tId="<%=talkRecord.getId() %>" data-toggle="modal" data-target="#myModal">
+					<a title="修改" href="javascript:;" class="ml-5 modify" style="text-decoration:none" data-toggle="modal" data-target="#myModal">
 						<i class="Hui-iconfont">&#xe6df;</i>
 					</a> 
-					<a title="删除" href="javascript:;" class="ml-5 delete" data-tId="<%=talkRecord.getId() %>" style="text-decoration:none">
+					<a title="删除" href="javascript:;" class="ml-5 delete" style="text-decoration:none">
 						<i class="Hui-iconfont">&#xe6e2;</i>
 					</a>
 				</td>
@@ -126,8 +131,18 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	当前位于第  <%=ye %> 页，共  <%=maxPage %> 页
 </div>
 <div id="pageGro" class="cb">
-	<div class="pageBegin"><a class="customer-page-begin" href="customerTalk?ye=1&customer.name=<%=name%>"> 首页</a></div>
-	<div class="pageUp"><a class="customer-page-pre" href="customerTalk?ye=<%=ye-1%>&customer.name=<%=name%>"> 上一页</a></div>
+	<div class="pageBegin">
+		<a class="customer-page-begin" 
+		href="talkRecord?ye=1&customer.name=<%=name%>&customer.id=<%=cId%>"> 
+			首页
+		</a>
+	</div>
+	<div class="pageUp">
+		<a class="customer-page-pre" 
+		href="talkRecord?ye=<%=ye-1%>&customer.name=<%=name%>&customer.id=<%=cId%>"> 
+			上一页
+		</a>
+	</div>
     <div class="pageList">
        <ul class="pagination">
 			<%
@@ -143,17 +158,25 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				for(int i = begin; i <= end; i++){
 			 %>
 			 <li <%if (ye == i) {%>class="on" style="color:#fff;"<%} %> >
-				 <a href="customerTalk?ye=<%=i%>&customer.name=<%=name%>" <%if (ye == i) {%>style="color:#fff;"<%} %>>
+				 <a href="talkRecord?ye=<%=i%>&customer.name=<%=name%>&customer.id=<%=cId%>" 
+				 <%if (ye == i) {%>style="color:#fff;"<%} %>>
 				 <%=i %>
 				 </a>
 			 </li>
 			<% } %>
 		</ul>
     </div>
-    <div class="pageDown"><a href="customerTalk?ye=<%=ye+1 %>&customer.name=<%=name%>" > 下一页</a></div>
-    <div class="pageEnd"><a href="customerTalk?ye=<%=maxPage %>&customer.name=<%=name%>" > 尾页</a></div>
+    <div class="pageDown">
+	    <a href="talkRecord?ye=<%=ye+1 %>&customer.name=<%=name%>&customer.id=<%=cId%>" > 
+	    	下一页
+	    </a>
+    </div>
+    <div class="pageEnd">
+	    <a href="talkRecord?ye=<%=maxPage %>&customer.name=<%=name%>&customer.id=<%=cId%>" > 
+	 		  尾页
+	    </a>
+    </div>
 </div>
-
 <!-- 模态框（Modal） -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -186,7 +209,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-
 <script type="text/javascript">
 $(document).ready(function(){
 	var carMap = {};
@@ -217,11 +239,12 @@ $(document).ready(function(){
 	$("tr").click(function(){
 		$("tr").removeClass("info");
 		$(this).addClass("info");
-		selectId = $(this).data("id");
+		selectId = $(this).attr("data-tId");
 	});
-		
 	
 	$("#addTalkRecord").click(function(){
+		alert(selectId);
+		var cId = <%=cId%>;
 		if(selectId == 0){
 			alert("请选择要添加的记录！");
 		} else{
@@ -233,14 +256,13 @@ $(document).ready(function(){
 			success:function(data){
 				var tab = "<form> ";
 				tab += "<table id='modify-table' class='table table-border table-bordered table-hover table-bg table-sort'><thead><tr class='text-c'>";
-				tab += "<th width='25'><input type='checkbox'></th><th>序号</th><th>客户姓名</th><th>交流时间</th><th>交流方式</th><th>状态</th>";
+				tab += "<th width='25'><input type='checkbox'></th><th>序号</th><th>客户姓名</th><th>交流方式</th><th>状态</th>";
 				tab += "<th>接待销售员</th><th>备注</th></tr></thead><tbody>";
 				$.each(data,function(index, element){
 					tab += "<tr class='text-c'>";
 					tab += "<td><input type='checkbox' value='1'></td>";
 					tab += "<td><input type='hidden' style='width:50px;' name='id' value='-1'>" + element.id + "</td>";
 					tab += "<td><input type='hidden' style='width:80px;' name='customer.id' value='" + element.customer.id + "'>" + element.customer.name + "</td>";
-					tab += "<td><input type='text' style='width:130px;' name='dates' value='" + element.dates + "'></td>";
 					tab += "<td class='td-status'><select name='way.id'>";
 					$.each(wayMap, function(key,values){     
 					     tab += "<option "  ;
@@ -277,12 +299,10 @@ $(document).ready(function(){
 			}
 		});
 		}
-		
-
 	});
 
 	$(".modify").click(function(){
-		var tId = $(this).attr("data-tId");
+		var tId = $(this).parents("tr").attr("data-tId");
 		$.ajax({
 			type:"post",
 			url:"showModifyTalkRecord",
@@ -291,15 +311,13 @@ $(document).ready(function(){
 			success:function(data){
 				var tab = "<form > ";
 				tab += "<table id='modify-table' class='table table-border table-bordered table-hover table-bg table-sort'><thead><tr class='text-c'>";
-				tab += "<th width='25'><input type='checkbox'></th><th>序号</th><th>客户姓名</th><th>交流时间</th><th>交流方式</th><th>状态</th>";
+				tab += "<th width='25'><input type='checkbox'></th><th>序号</th><th>客户姓名</th><th>交流方式</th><th>状态</th>";
 				tab += "<th>接待销售员</th><th>备注</th></tr></thead><tbody>";
 				$.each(data,function(index, element){
 					tab += "<tr class='text-c'>";
 					tab += "<td><input type='checkbox' value='1'></td>";
 					tab += "<td><input type='hidden' style='width:50px;' name='id' value='" + element.id + "'>" + element.id + "</td>";
 					tab += "<td><input type='hidden' style='width:80px;' name='customer.id' value='" + element.customer.id + "'>" + element.customer.name + "</td>";
-					tab += "<td><input type='text' style='width:130px;' name='dates' value='" + element.dates + "'></td>";
-					//tab += "<td><input type='hidden' style='width:100px;' name='way.id' value='" +  element.way.id + "'>" + element.way.way + "</td>";
 					tab += "<td class='td-status'><select name='way.id'>";
 					$.each(wayMap, function(key,values){     
 					     tab += "<option "  ;
@@ -354,34 +372,33 @@ $(document).ready(function(){
 			success: function(data){
 				alert(data);
 				if(data == "保存成功"){
-					location.href="customerTalk";
+					location.href="talkRecord";
 				}
 			}
 		});
 	});
 	
 	$(".delete").click(function(){
-		var tId = $(this).attr("data-tId");
-		alert(tId);
+		var tId = $(this).parents("tr").attr("data-tId");
+		var cId = $(this).parents("tr").attr("data-cId");
+		//alert(tId);
 		$.ajax({
 			type:"post",
 			url: "deleteTalkRecord",
-			data:"tId=" + tId,
+			data:"id=" + tId + "customer.id=" + cId,
 			dataType:"text",
 			success: function(data){
 				alert(data);
 				if(data == "删除成功"){
-					location.href="customerTalk";
+					location.href="talkRecord";
 				}
 			}
 		});
 	});
-
 	$("#select").click(function(){
 		var name = $("#customer-name").val();
-		window.location.href="customerTalk?customer.name=" + name;
+		window.location.href="talkRecord?customer.name=" + name;
 	});
-
 });
 </script> 
 </body>

@@ -40,14 +40,14 @@ public class UserController {
 			conditonUser.setSalesman(salesman);
 		}
 		int count = userService.searchCount();
-		int maxPage = (count - 1) / 2 + 1;
+		int maxPage = (count - 1) / 5 + 1;
 		if (ye == null || ye < 1) {
 			ye = 1;
 		}
 		if (ye > maxPage) {
 			ye = maxPage;
 		}
-		int begin = (ye - 1) * 2;
+		int begin = (ye - 1) * 5;
 		List<User> users = userService.search(begin, conditonUser);
 		List<Rank> rankList = rankService.searchAll();
 		List<Salesman> salesmanList = salesmanService.searchAll();

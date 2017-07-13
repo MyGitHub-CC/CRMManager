@@ -16,6 +16,10 @@ public interface TalkRecordService {
 
 	public int add(TalkRecord talkRecord);
 
-	public int delete(int tId);
+	public int delete(TalkRecord talkRecord);
+
+	public List<TalkRecord> searchBySupervision();
+
+	public int addModify(List<TalkRecord> talkRecords);
 
 }

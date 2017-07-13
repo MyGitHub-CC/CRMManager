@@ -1,12 +1,12 @@
 package entity;
 
 public class TalkRecord {
-
 	private int id;
 	private Customer customer;
 	private String dates;
 	private Way way;
 	private Salesman salesman;
+	private Eval eval;
 
 	public int getId() {
 		return id;
@@ -46,6 +46,21 @@ public class TalkRecord {
 
 	public void setSalesman(Salesman salesman) {
 		this.salesman = salesman;
+	}
+
+	public Eval getEval() {
+		return eval;
+	}
+
+	public void setEval(Eval eval) {
+		this.eval = eval;
+	}
+
+	@Override
+	public String toString() {
+		return "TalkRecord [id=" + id + ", customer=" + customer + ", dates="
+				+ dates + ", way=" + way + ", salesman=" + salesman + ", eval="
+				+ eval + "]";
 	}
 
 }

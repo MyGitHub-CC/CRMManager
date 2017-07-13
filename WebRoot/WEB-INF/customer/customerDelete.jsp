@@ -17,7 +17,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<style type="text/css" media="screen">
 	/* CSS Document */
 	/*分页*/
-	#pageGro{ width:400px; height:25px; float:right;}
+	#pageGro{ height:25px; float:right;margin-right:20px;}
 	#pageGro div,#pageGro div ul li{ font-size:12px; color:#666; line-height:26px; float:left; margin-left:5px;}
 	#pageGro div ul li{ width:22px; text-align:center; border:1px solid #ccc; cursor:pointer;}
 	#pageGro div ul li.on{ color:#fff; background:#3c90d9; border:1px solid #3c90d9;}
@@ -77,16 +77,14 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<table class="table table-border table-bordered table-hover table-bg table-sort">
 		<thead>
 			<tr class="text-c">
-				<th width="25"><input type="checkbox" name="" value=""></th>
+				<th width="25"><input type="checkbox"></th>
 				<th>序号</th>
 				<th>客户姓名</th>
 				<th>性别</th>
-				<th>年龄</th>
-				<th>职业</th>
-				<th>收入（元/月）</th>
 				<th>联系方式</th>
 				<th>意向车型</th>
-				<th>日期</th>
+				<th>最后来访日期</th>
+				<th>交流方式</th>
 				<th>状态</th>
 				<th>接待销售员</th>
 				<th>操作</th>			
@@ -100,20 +98,20 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			<tr class="text-c">
 				<td><input type="checkbox" value="1" name=""></td>
 				<td><%=customer.getId() %></td>
-				<td><%=customer.getName() %></td>
+				<td title="年龄：<%=customer.getAge()%>岁,职业：<%=customer.getWorks() %>,收入：<%=customer.getIncome()%>元/月,电话：<%=customer.getPhone()%>">
+						<%=customer.getName() %>
+				</td>
 				<td><%=customer.getSex() %></td>
-				<td><%=customer.getAge() %></td>
-				<td><%=customer.getWorks() %></td>
-				<td class="text-l"><%=customer.getIncome() %></td>
 				<td><%=customer.getPhone() %></td>
 				<td><%=customer.getCar().getBrand()%></td>
 				<td><%=customer.getDates() %></td>
+				<td><%=customer.getWay().getWay() %></td>
 				<td class="td-status">
 					<span class="label label-success radius">
 					<%=customer.getStatus2().getStatus2() %>
 					</span>
 				</td>
-				<td class="td-status">
+				<td>
 					<%=customer.getSalesman().getName() %>
 				</td>
 				<td class="td-manage">

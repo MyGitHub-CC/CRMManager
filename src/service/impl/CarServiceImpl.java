@@ -22,13 +22,13 @@ public class CarServiceImpl implements CarService {
 	}
 
 	@Override
-	public List<Car> search(int begin) {
-		return carDao.search(begin);
+	public List<Car> search(int begin, Car car) {
+		return carDao.search(begin,car);
 	}
 
 	@Override
-	public int searchCount() {
-		return carDao.searchCount();
+	public int searchCount(Car car) {
+		return carDao.searchCount(car);
 	}
 
 	@Override
