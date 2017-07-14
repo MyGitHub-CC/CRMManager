@@ -14,13 +14,13 @@ public class IndexController {
 
 	@RequestMapping(value="index", method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView index(HttpServletRequest request) {
-		User user = (User)request.getSession().getAttribute("user");
+//		User user = (User)request.getSession().getAttribute("user");
 		ModelAndView mv = new ModelAndView("index/index");
-		if (user != null) {
-			mv.setViewName("index/index");
-		} else {
-			mv.setViewName("login/login");
-		}
+//		if (user != null) {
+//			mv.setViewName("index/index");
+//		} else {
+//			mv.setViewName("login/login");
+//		}
 		return mv;
 	}
 	

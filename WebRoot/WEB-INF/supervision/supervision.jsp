@@ -34,6 +34,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	List<Status> status2List = (List<Status>) request.getAttribute("status2List");
 	List<Salesman> salesmanList = (List<Salesman>) request.getAttribute("salesmanList");
 	List<Way> wayList = (List<Way>) request.getAttribute("wayList");
+	List<Eval> evalList = (List<Eval>) request.getAttribute("evalList");
 	TalkRecord conditonTalk = new TalkRecord();
 	if(request.getAttribute("conditonTalk") != null){
 		conditonTalk = (TalkRecord) request.getAttribute("conditonTalk");
@@ -46,138 +47,124 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	int maxPage = (Integer) request.getAttribute("maxPage");
  %>
 <body>
-<nav class="breadcrumb">
-	<i class="Hui-iconfont">&#xe67f;</i> 首页
-	<span class="c-gray en">&gt;</span> 用户中心
-	<span class="c-gray en">&gt;</span> 用户管理
-	<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
-		<i class="Hui-iconfont">&#xe68f;</i>
-	</a>
-</nav>
-<div class="page-container">
-	<div class="text-c"> 日期范围：
-		<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
-		-
-		<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
-		<input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="customer-name" name="name" 
-		value="<%if(conditonTalk.getCustomer().getName() != null){out.print(conditonTalk.getCustomer().getName());} %>" />
-		<button type="submit" class="btn btn-success radius" id="select">
-			<i class="Hui-iconfont">&#xe665;</i> 搜用户
-		</button>
-	</div>
-	<div class="cl pd-5 bg-1 bk-gray mt-20"> 
-		<span class="l">
-			<a href="javascript:;" id="deleteTalkRecords" class="btn btn-danger radius">
-				<i class="Hui-iconfont">&#xe6e2;</i> 批量删除
-			</a> 
-			<a href="showAddSupervision" class="btn btn-primary radius" >
-				<i class="Hui-iconfont">&#xe600;</i> 随机审核
-			</a>
-		</span> 
-		<span class="r">共有数据：<strong>88</strong> 条</span> 
-	</div>
-	<div class="mt-20">
-	<table class="table table-border table-bordered table-hover table-bg table-sort">
-		<thead>
-			<tr class="text-c">
-				<th width="25"><input type="checkbox" name="" value=""></th>
-				<th>序号</th>
-				<th>客户姓名</th>
-				<th>交流方式</th>
-				<th>交流时间</th>
-				<th>状态</th>
-				<th>接待销售员</th>
-				<th>备注</th>
-				<th>审核结果</th>
-				<th>操作</th>
-			</tr>
-		</thead>
-		<tbody>
-		<%
-			for(int i = 0; i < talkRecords.size(); i++){
-				TalkRecord talkRecord = talkRecords.get(i);
-		%>
-			<tr class="text-c" data-id="<%=talkRecord.getId() %>" >
-				<td><input type="checkbox" value="1" name=""></td>
-				<td><%=talkRecord.getId() %></td>
-				<td><%=talkRecord.getCustomer().getName() %></td>
-				<td><%=talkRecord.getWay().getWay() %></td>
-				<td><%=talkRecord.getDates() %></td>
-				<td><%=talkRecord.getCustomer().getStatus2().getStatus2() %></td>
-				<td><%=talkRecord.getSalesman().getName() %></td>
-				<td>33</td>
-				<td><%=talkRecord.getEval().getEval() %></td>
-				<td class="td-manage">
-					<a title="修改" href="javascript:;" class="ml-5 modify" style="text-decoration:none" data-tId="<%=talkRecord.getId() %>" data-toggle="modal" data-target="#myModal">
-						<i class="Hui-iconfont">&#xe6df;</i>
-					</a> 
-					<a title="删除" href="javascript:;" class="ml-5 delete" data-tId="<%=talkRecord.getId() %>" style="text-decoration:none">
-						<i class="Hui-iconfont">&#xe6e2;</i>
-					</a>
-				</td>
-			</tr>
-		<% } %>
-		</tbody>
-	</table>
-	</div>
-</div>
-
-<div class="customer-info" style="float:left;margin-left:20px;">
-	当前位于第  <%=ye %> 页，共  <%=maxPage %> 页
-</div>
-<div id="pageGro" class="cb">
-	<div class="pageBegin"><a class="customer-page-begin" href="supervision?ye=1"> 首页</a></div>
-	<div class="pageUp"><a class="customer-page-pre" href="supervision?ye=<%=ye-1%>"> 上一页</a></div>
-    <div class="pageList">
-       <ul class="pagination">
+	<nav class="breadcrumb">
+		<i class="Hui-iconfont">&#xe67f;</i> 首页
+		<span class="c-gray en">&gt;</span> 用户中心
+		<span class="c-gray en">&gt;</span> 用户管理
+		<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" >
+			<i class="Hui-iconfont">&#xe68f;</i>
+		</a>
+	</nav>
+	<div class="page-container">
+		<div class="text-c"> 日期范围：
+			<input type="text" onfocus="WdatePicker({ maxDate:'#F{$dp.$D(\'datemax\')||\'%y-%M-%d\'}' })" id="datemin" class="input-text Wdate" style="width:120px;">
+			-
+			<input type="text" onfocus="WdatePicker({ minDate:'#F{$dp.$D(\'datemin\')}',maxDate:'%y-%M-%d' })" id="datemax" class="input-text Wdate" style="width:120px;">
+			<input type="text" class="input-text" style="width:250px" placeholder="输入会员名称、电话、邮箱" id="customer-name" name="name" 
+			value="<%if(conditonTalk.getCustomer().getName() != null){out.print(conditonTalk.getCustomer().getName());} %>" />
+			<button type="submit" class="btn btn-success radius" id="select">
+				<i class="Hui-iconfont">&#xe665;</i> 搜用户
+			</button>
+		</div>
+		<div class="cl pd-5 bg-1 bk-gray mt-20"> 
+			<span class="l">
+				<a href="javascript:;" id="deleteTalkRecords" class="btn btn-danger radius">
+					<i class="Hui-iconfont">&#xe6e2;</i> 批量删除
+				</a> 
+				<a href="showAddSupervision" class="btn btn-primary radius" >
+					<i class="Hui-iconfont">&#xe600;</i> 随机审核
+				</a>
+			</span> 
+			<span class="r">共有数据：<strong>88</strong> 条</span> 
+		</div>
+		<div class="mt-20">
+		<table class="table table-border table-bordered table-hover table-bg table-sort">
+			<thead>
+				<tr class="text-c">
+					<th width="25"><input type="checkbox" ></th>
+					<th>序号</th>
+					<th>客户姓名</th>
+					<th>交流方式</th>
+					<th>状态</th>
+					<th>意向车型</th>
+					<th>交流时间</th>
+					<th>接待销售员</th>
+					<th>备注</th>
+					<th>审核结果</th>
+					<th>操作</th>
+				</tr>
+			</thead>
+			<tbody>
 			<%
-				int begin = ye;
-				int end = ye + 4;
-				if(end > maxPage) {
-					end = maxPage;
-					begin = end - 4;
-				}
-				if(begin < 1){
-					begin = 1;
-				}
-				for(int i = begin; i <= end; i++){
-			 %>
-			 <li <%if (ye == i) {%>class="on" style="color:#fff;"<%} %> >
-				 <a href="supervision?ye=<%=i%>" <%if (ye == i) {%>style="color:#fff;"<%} %>>
-				 <%=i %>
-				 </a>
-			 </li>
+				for(int i = 0; i < talkRecords.size(); i++){
+					TalkRecord talkRecord = talkRecords.get(i);
+			%>
+				<tr class="text-c" data-tid="<%=talkRecord.getId() %>" >
+					<td><input type="checkbox" value="1" name=""></td>
+					<td><%=talkRecord.getId() %></td>
+					<td><%=talkRecord.getCustomer().getName() %></td>
+					<td><%=talkRecord.getCustomer().getWay().getWay() %></td>
+					<td><%=talkRecord.getCustomer().getStatus2().getStatus2() %></td>
+					<td><%=talkRecord.getCustomer().getCar().getBrand() %></td>
+					<td><%=talkRecord.getDate() %></td>
+					<td><%=talkRecord.getCustomer().getSalesman().getName() %></td>
+					<td>33</td>
+					<td class="evalId">
+						<select size="1">
+						<%
+							for(int j= 0;j < evalList.size();j++){
+								Eval eval = evalList.get(j);
+						 %>
+						<option value="<%=eval.getId() %>" 
+						<%if(talkRecord.getEval().getId() == eval.getId()){%>selected="selected"<%} %>>
+						<%=eval.getEval() %></option>
+						<%} %>
+						</select>
+					</td>
+					<td class="td-manage">
+						<a title="修改保存" href="javascript:;"  class="ml-5 modify" style="text-decoration:none" data-tId="<%=talkRecord.getId() %>" data-toggle="modal" data-target="#myModal">
+							<button class="btn btn-primary radius">保存</button>
+						</a> 
+					</td>
+				</tr>
 			<% } %>
-		</ul>
-    </div>
-    <div class="pageDown"><a href="supervision?ye=<%=ye+1 %>" > 下一页</a></div>
-    <div class="pageEnd"><a href="supervision?ye=<%=maxPage %>" > 尾页</a></div>
-</div>
+			</tbody>
+		</table>
+	  </div>
+	</div>
 
-<!-- 模态框（Modal） -->
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="myModalLabel">客户信息</h5>
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-					&times;
-				</button>
-			</div>
-			<div class="modal-body" id="modal-body-table">
-				
-			</div>
-			<div class="modal-footer">
-				<button id="submit-customer" type="button" class="btn btn-primary">
-					保存
-				</button>
-				<button type="button" class="btn btn-default" data-dismiss="modal">
-					取消
-				</button>
-			</div>
-		</div><!-- /.modal-content -->
-	</div><!-- /.modal -->
-</div>
+	<div class="customer-info" style="float:left;margin-left:20px;">
+		当前位于第  <%=ye %> 页，共  <%=maxPage %> 页
+	</div>
+	<div id="pageGro" class="cb">
+		<div class="pageBegin"><a class="customer-page-begin" href="supervision?ye=1"> 首页</a></div>
+		<div class="pageUp"><a class="customer-page-pre" href="supervision?ye=<%=ye-1%>"> 上一页</a></div>
+	    <div class="pageList">
+	       <ul class="pagination">
+				<%
+					int begin = ye;
+					int end = ye + 4;
+					if(end > maxPage) {
+						end = maxPage;
+						begin = end - 4;
+					}
+					if(begin < 1){
+						begin = 1;
+					}
+					for(int i = begin; i <= end; i++){
+				 %>
+				 <li <%if (ye == i) {%>class="on" style="color:#fff;"<%} %> >
+					 <a href="supervision?ye=<%=i%>" <%if (ye == i) {%>style="color:#fff;"<%} %>>
+					 <%=i %>
+					 </a>
+				 </li>
+				<% } %>
+			</ul>
+	    </div>
+	    <div class="pageDown"><a href="supervision?ye=<%=ye+1 %>" > 下一页</a></div>
+	    <div class="pageEnd"><a href="supervision?ye=<%=maxPage %>" > 尾页</a></div>
+	</div>
+
 					
 <!--请在下方写此页面业务相关的脚本-->
 <script type="text/javascript" src="lib/My97DatePicker/4.8/WdatePicker.js"></script> 
@@ -186,128 +173,19 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <script src="bootstrap/js/jquery.min.js" type="text/javascript"></script>
 <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
-
 <script type="text/javascript">
-$(document).ready(function(){
-	var carMap = {};
-	var status2Map = {};
-	var salesmanMap = {};
-	var wayMap = {};
-	<% for (int i=0; i < carList.size(); i++){%>
-		var key = <%=carList.get(i).getId() %>;
-		var value = "<%=carList.get(i).getBrand()%>";
-		carMap[key] = value;
-	<% } %>
-	<% for (int i=0; i < status2List.size(); i++){%>
-		var key = <%=status2List.get(i).getId() %>;
-		var value = "<%=status2List.get(i).getStatus2()%>";
-		status2Map[key] = value;
-	<% } %>
-	<% for (int i=0; i < salesmanList.size(); i++){%>
-		var key = <%=salesmanList.get(i).getId() %>;
-		var value = "<%=salesmanList.get(i).getName() %>";
-		salesmanMap[key] = value;
-	<% } %>
-	<% for (int i=0; i < wayList.size(); i++){%>
-		var key = <%=wayList.get(i).getId() %>;
-		var value = "<%=wayList.get(i).getWay()%>";
-		wayMap[key] = value;
-	<% } %>
-	var selectId = 0;
-	$("tr").click(function(){
-		$("tr").removeClass("info");
-		$(this).addClass("info");
-		selectId = $(this).data("id");
-	});
-	
+$(document).ready(function(){	
 	$(".modify").click(function(){
-		var tId = $(this).attr("data-tId");
+		var ids =  $(this).parents("tr").attr("data-tid");
+		var eIds = $(this).parents("tr").children(".evalId").children("select").val();
+		eIds[0] = 
 		$.ajax({
 			type:"post",
-			url:"showModifyTalkRecord",
-			data:"tId=" + tId,
-			dataType:"json",
+			url:"addSupervision",
+			data:"ids=" + ids +"&eIds="+eIds,
+			dataType:"text",
 			success:function(data){
-				var tab = "<form > ";
-				tab += "<table id='modify-table' class='table table-border table-bordered table-hover table-bg table-sort'><thead><tr class='text-c'>";
-				tab += "<th width='25'><input type='checkbox'></th><th>序号</th><th>客户姓名</th><th>交流方式</th><th>状态</th>";
-				tab += "<th>接待销售员</th><th>备注</th></tr></thead><tbody>";
-				$.each(data,function(index, element){
-					tab += "<tr class='text-c'>";
-					tab += "<td><input type='checkbox' value='1'></td>";
-					tab += "<td><input type='hidden' style='width:50px;' name='id' value='" + element.id + "'>" + element.id + "</td>";
-					tab += "<td><input type='hidden' style='width:80px;' name='customer.id' value='" + element.customer.id + "'>" + element.customer.name + "</td>";
-					tab += "<td class='td-status'><select name='way.id'>";
-					$.each(wayMap, function(key,values){     
-					     tab += "<option "  ;
-					     if(element.way.id == key){
-					     	tab += " selected='selected' ";
-					     }
-					     tab += " value='" + key + "'>" + wayMap[key] + "</option>";
-					}); 
-					tab += "</select></td>";
-					tab += "<td class='td-status'><select name='customer.status2.id'>";
-					$.each(status2Map, function(key,values){     
-					     tab += "<option "  ;
-					     if(element.customer.status2.id == key){
-					     	tab += " selected='selected' ";
-					     }
-					     tab += " value='" + key + "'>" + status2Map[key] + "</option>";
-					}); 
-					tab += "</select></td>";
-					tab += "<td><select name='salesman.id'>";
-					$.each(salesmanMap,function(key,values){     
-					     tab += "<option "  ;
-					     if(element.salesman.id == key){
-					     	tab += " selected='selected' ";
-					     }
-					     tab += " value='" + key + "'>" + salesmanMap[key] + "</option>";
-					}); 
-					tab += "</select></td>";
-					tab += "<td><input type='text' /></td>";
-					tab += "</tr>";
-				});
-				tab += "</tbody></table>";
-				tab += "</form>";
-				$("#modal-body-table").html(tab);
-			}
-		});
-	});
-
-	$("#submit-customer").click(function(){
-		var id = $("[name=id]").val();
-		var obj;
-		if(id > 0){
-			obj = "modify";
-		}
-		//alert(obj);
-		$.ajax({
-			type:"post",
-			url: obj + "TalkRecord",
-			data:$("form").serialize(),
-			dataType:"text",
-			success: function(data){
 				alert(data);
-				if(data == "保存成功"){
-					location.href="customerTalk";
-				}
-			}
-		});
-	});
-	
-	$(".delete").click(function(){
-		var tId = $(this).attr("data-tId");
-		alert(tId);
-		$.ajax({
-			type:"post",
-			url: "deleteTalkRecord",
-			data:"tId=" + tId,
-			dataType:"text",
-			success: function(data){
-				alert(data);
-				if(data == "删除成功"){
-					location.href="customerTalk";
-				}
 			}
 		});
 	});

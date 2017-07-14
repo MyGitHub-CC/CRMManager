@@ -80,9 +80,8 @@
 	
 	
 	<insert id="insert" parameterType="entity.Customer" useGeneratedKeys="true" keyProperty="id">
-		insert into customer (name,sex,age,works,income,phone,car_id,sta_id,sales_id,w_id,del) 
-		 values (#{name},#{sex}, #{age}, #{works},#{income}, #{phone},#{car.id}
-		 ,#{status2.id},#{salesman.id},#{way.id},0)
+		insert into customer (name,sex,age,works,income,phone,w_id,sta_id,car_id,sales_id,del) 
+	 values (#{name},#{sex}, #{age}, #{works},#{income}, #{phone},#{way.id},#{status2.id},#{car.id},#{salesman.id},0)
 	</insert>
 	
 	<update id="update" parameterType="entity.Customer"  >
@@ -100,8 +99,8 @@
 	</delete>
 	
 	<update id="updateTalkRecord" parameterType="entity.TalkRecord"  >
-		update customer set w_id=#{way.id}, sta_id =#{customer.status2.id},
-		sales_id=#{salesman.id} where id =#{customer.id}
+		update customer set w_id=#{customer.way.id}, sta_id =#{customer.status2.id},
+		car_id=#{customer.car.id},sales_id=#{customer.salesman.id} where id =#{customer.id}
 	</update>
 
 </mapper> 

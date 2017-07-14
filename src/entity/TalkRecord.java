@@ -3,13 +3,15 @@ package entity;
 public class TalkRecord {
 	private int id;
 	private Customer customer;
-	private String dates;
-	private Way way;
-	private Salesman salesman;
+	private String date;
 	private Eval eval;
 
 	public int getId() {
 		return id;
+	}
+
+	public Eval getEval() {
+		return eval;
 	}
 
 	public void setId(int id) {
@@ -24,43 +26,22 @@ public class TalkRecord {
 		this.customer = customer;
 	}
 
-	public String getDates() {
-		return dates;
-	}
-
-	public void setDates(String dates) {
-		this.dates = dates;
-	}
-
-	public Way getWay() {
-		return way;
-	}
-
-	public void setWay(Way way) {
-		this.way = way;
-	}
-
-	public Salesman getSalesman() {
-		return salesman;
-	}
-
-	public void setSalesman(Salesman salesman) {
-		this.salesman = salesman;
-	}
-
-	public Eval getEval() {
-		return eval;
-	}
-
 	public void setEval(Eval eval) {
 		this.eval = eval;
 	}
 
+	public String getDate() {
+		return date;
+	}
+
+	public void setDate(String date) {
+		this.date = date;
+	}
+
 	@Override
 	public String toString() {
-		return "TalkRecord [id=" + id + ", customer=" + customer + ", dates="
-				+ dates + ", way=" + way + ", salesman=" + salesman + ", eval="
-				+ eval + "]";
+		return "TalkRecord [id=" + id + ", customer=" + customer + ", date="
+				+ date + ", eval=" + eval + "]";
 	}
 
 }

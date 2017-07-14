@@ -9,10 +9,7 @@ import service.CustomerService;
 import dao.CustomerDao;
 import dao.TalkRecordDao;
 import entity.Customer;
-import entity.Salesman;
-import entity.Status;
 import entity.TalkRecord;
-import entity.Way;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -38,33 +35,26 @@ public class CustomerServiceImpl implements CustomerService {
 
 	@Override
 	public int modify(Customer customer) {
-		return customerDao.update(customer);
+		int result = customerDao.update(customer);
+		int result2 = 0;
+		if (result > 0) {
+			int cId = customer.getId();
+			int id = talkRecordDao.searchMaxIdByCustomer(cId);
+			TalkRecord talkRecord = new TalkRecord();
+			talkRecord.setId(id);
+			talkRecord.setCustomer(customer);
+			result2 = talkRecordDao.update(talkRecord);
+		}
+		return result2;
 	}
 
 	@Override
 	public int add(Customer customer) {
 		int result = customerDao.insert(customer);//可以做一个事务
-		int result2 = -1;
+		int result2 = 0;
 		if (result > 0) {
-			int cusId = customer.getId();
-			String dates= customer.getDates();
-			int wId = customer.getWay().getId();
-			int staId =customer.getStatus2().getId();
-			int salesId = customer.getSalesman().getId();
 			TalkRecord talkRecord = new TalkRecord();
-			Status status = new Status();
-			Customer customer2 = new Customer();
-			customer2.setStatus2(status);
-			Way way = new Way();
-			Salesman salesman = new Salesman();
-			talkRecord.setCustomer(customer2);
-			talkRecord.setSalesman(salesman);
-			talkRecord.setWay(way);
-			talkRecord.getCustomer().setId(cusId);
-			talkRecord.setDates(dates);
-			talkRecord.getWay().setId(wId);
-			talkRecord.getCustomer().getStatus2().setId(staId);
-			talkRecord.getSalesman().setId(salesId);
+			talkRecord.setCustomer(customer);
 			result2 = talkRecordDao.insert(talkRecord);
 		}
 		return result2;
