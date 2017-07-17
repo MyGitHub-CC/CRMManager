@@ -26,7 +26,5 @@ public interface TalkRecordDao {
 	public int addModify(TalkRecord talkRecord);
 
 	public TalkRecord searchMaxCId(int cId);
-	
-	public int searchMaxIdByCustomer(int cId);
 
 }

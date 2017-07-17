@@ -75,10 +75,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<%=talkRecord.getId() %>
 				</td>
 				<td><%=talkRecord.getCustomer().getName() %></td>
-				<td><%=talkRecord.getDate() %></td>
-				<td><%=talkRecord.getCustomer().getWay().getWay() %></td>
+				<td><%=talkRecord.getDates() %></td>
+				<td><%=talkRecord.getWay().getWay() %></td>
 				<td><%=talkRecord.getCustomer().getStatus2().getStatus2() %></td>
-				<td><%=talkRecord.getCustomer().getSalesman().getName() %></td>
+				<td><%=talkRecord.getSalesman().getName() %></td>
 				<td>33</td>
 				<td>
 					<select class="modifyeval"  data-eId="<%=talkRecord.getId() %>" >
@@ -123,6 +123,7 @@ $(document).ready(function(){
 		var ids = new Array();
 		var eIds = new Array();
 		$(".modifyeval").each(function(index,element){
+			//alert($(this).val());
 			ids[index] = $(this).attr("data-eId");
 			eIds[index] = $(this).val();
 		});

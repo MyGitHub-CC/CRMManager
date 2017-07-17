@@ -3010,6 +3010,7 @@ table.dataTable thead .sorting_desc {
 }
 
 .textarea {
+	height: 100px;
 	resize: none;
 	font-size: 14px;
 	padding: 4px
@@ -9983,7 +9984,11 @@ a.label:hover,a.label:focus,a.badge:hover,a.badge:focus {
 
 .modal-content {
 	position: relative;
-	top:30px;
+	
+	top:80px;
+	right:200px;
+	width:1020px;
+	
 	background-color: #fff;
 	border: 1px solid #999;
 	border: 1px solid rgba(0, 0, 0, .2);

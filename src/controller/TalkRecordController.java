@@ -34,13 +34,13 @@ public class TalkRecordController {
 	@Autowired
 	CustomerService  customerService;
 	@Autowired
-	WayService wayService;
+	CarService carService;
 	@Autowired
 	StatusService statusService;
 	@Autowired
-	CarService carService;
-	@Autowired
 	SalesmanService salesmanService;
+	@Autowired
+	WayService wayService;
 	
 	@RequestMapping(value="talkRecord", method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView talkRecord(Integer ye,TalkRecord conditionTalk) {
@@ -77,7 +77,7 @@ public class TalkRecordController {
 	
 	@RequestMapping(value="talkRecordByCId", method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView talkRecordByCId(Integer ye,TalkRecord conditionTalk) {
-		ModelAndView mv = new ModelAndView();
+		ModelAndView mv = new ModelAndView("talkRecord/talkRecordByCId");
 		int count = trService.searchCount(conditionTalk);
 		int maxPage =  (count - 1) / 5 + 1;
 		if (ye == null || ye < 1) {
@@ -92,6 +92,7 @@ public class TalkRecordController {
 		mv.addObject("conditionTalk", conditionTalk);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("ye", ye);
+		
 		int cId = conditionTalk.getCustomer().getId();
 		Customer customer = customerService.searchById(cId,0);
 		List<Car> carList = carService.searchAll();
@@ -103,13 +104,10 @@ public class TalkRecordController {
 		mv.addObject("salesmanList", salesmanList);
 		mv.addObject("wayList", wayList);
 		mv.addObject("customer", customer);
-		if(talkRecords.size() == 0){
-			mv.setViewName("talkRecord/talkRecord");
-		} else{
-			mv.setViewName("talkRecord/talkRecordByCId");
-		}
 		return mv;
 	}
+	
+	
 
 	@RequestMapping(value="showModifyTalkRecord", method={RequestMethod.POST,RequestMethod.GET})
 	public void showModifyTalkRecord(int tId, HttpServletResponse response) {

@@ -52,34 +52,32 @@ public class CustomerController {
 		}
 		int begin = (ye - 1) * 5;
 		List<Customer> customers =  customerService.search(begin,conditonCustomer,del);
+		List<Car> carList = carService.searchAll();
+		List<Status> status2List = statusService.searchAll();
+		List<Salesman> salesmanList = salesmanService.searchAll();
+		List<Way> wayList = wayService.searchAll();
 		mv.addObject("customers", customers);
 		mv.addObject("conditonCustomer", conditonCustomer);
 		mv.addObject("maxPage", maxPage);
 		mv.addObject("ye", ye);
-		// 下拉列表集合
-		List<Way> wayList = wayService.searchAll();
-		List<Status> status2List = statusService.searchAll();
-		List<Car> carList = carService.searchAll();
-		List<Salesman> salesmanList = salesmanService.searchAll();
-		mv.addObject("wayList", wayList);
-		mv.addObject("status2List", status2List);
 		mv.addObject("carList", carList);
+		mv.addObject("status2List", status2List);
 		mv.addObject("salesmanList", salesmanList);
+		mv.addObject("wayList", wayList);
 		return mv;
 	}
 	
 	@RequestMapping(value="showAddCustomer", method={RequestMethod.POST,RequestMethod.GET})
 	public ModelAndView showAddCustomer() {
 		ModelAndView mv = new ModelAndView("customer/addCustomer");
-		// 下拉列表集合
-		List<Way> wayList = wayService.searchAll();
-		List<Status> status2List = statusService.searchAll();
 		List<Car> carList = carService.searchAll();
+		List<Status> status2List = statusService.searchAll();
 		List<Salesman> salesmanList = salesmanService.searchAll();
-		mv.addObject("wayList", wayList);
-		mv.addObject("status2List", status2List);
+		List<Way> wayList = wayService.searchAll();
 		mv.addObject("carList", carList);
+		mv.addObject("status2List", status2List);
 		mv.addObject("salesmanList", salesmanList);
+		mv.addObject("wayList", wayList);
 		return mv;
 	}
 	

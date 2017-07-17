@@ -4,6 +4,7 @@
     "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="dao.TalkRecordDao">
+
 	<select id="search" resultMap="search" >
 		SELECT * FROM  v_talk_cus_way_sta_sales_eval where 1=1 
 		<if test="conditionTalk.customer.name != null and conditionTalk.customer.name != '' ">
@@ -12,22 +13,24 @@
 		<if test="conditionTalk.customer.id > 0 ">
 			 and cusId = #{conditionTalk.customer.id}
 		</if>
-		 and del = 0 limit #{begin},5
+		 limit #{begin},5
 	</select>
 	<resultMap type="entity.TalkRecord" id="search">
 		<id property="id" column="id"></id>
-		<result property="date" column="dates"></result>
+		<result property="dates" column="dates"></result>
 		<association property="customer" column="cus_id"  javaType="entity.Customer">
 			<id property="id" column="cusId"></id>
 			<result property="name" column="cusName"></result>
-			<result property="way.id" column="wId"></result>
-			<result property="way.way" column="way"></result>
 			<result property="status2.id" column="staId"></result>
 			<result property="status2.status2" column="status2"></result>
-			<result property="car.id" column="carId"></result>
-			<result property="car.brand" column="brand"></result>
-			<result property="salesman.id" column="salId"></result>
-			<result property="salesman.name" column="salName"></result>
+		</association>
+		<association property="way" column="way_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
 		</association>
 		<association property="eval" column="ev_id"  javaType="entity.Eval">
 			<id property="id" column="evId"></id>
@@ -36,7 +39,7 @@
 	</resultMap>
 	
 	<select id="searchCount" resultType="int" >
-		select count(id) as n from v_talk_cus_way_sta_sales_eval  where 1=1 and del = 0 
+		select count(id) as n from v_talk_cus_way_sta_sales_eval  where 1=1 
 		<if test="customer.name != null and customer.name != '' ">
 			 and cusName like '%${customer.name}%'
 		</if>
@@ -50,18 +53,20 @@
 	</select>
 	<resultMap type="entity.TalkRecord" id="searchById">
 		<id property="id" column="id"></id>
-		<result property="date" column="dates"></result>
+		<result property="dates" column="dates"></result>
 		<association property="customer" column="cus_id"  javaType="entity.Customer">
 			<id property="id" column="cusId"></id>
 			<result property="name" column="cusName"></result>
-			<result property="way.id" column="wId"></result>
-			<result property="way.way" column="way"></result>
 			<result property="status2.id" column="staId"></result>
 			<result property="status2.status2" column="status2"></result>
-			<result property="car.id" column="carId"></result>
-			<result property="car.brand" column="brand"></result>
-			<result property="salesman.id" column="salId"></result>
-			<result property="salesman.name" column="salName"></result>
+		</association>
+		<association property="way" column="way_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
 		</association>
 		<association property="eval" column="ev_id"  javaType="entity.Eval">
 			<id property="id" column="evId"></id>
@@ -69,19 +74,14 @@
 		</association>
 	</resultMap>
 	
-	<select id="searchMaxIdByCustomer" resultType="int" >
-		SELECT max(id) FROM talk_record WHERE cus_id =#{customer.id}
-	</select>
-	
 	<update id="update" parameterType="entity.TalkRecord"  >
-		update talk_record set cus_id=#{customer.id},w_id=#{customer.way.id},
-		sta_id=#{customer.status2.id},sales_id=#{customer.salesman.id},car_id=#{customer.car.id}  
-		 where id =#{id}
+		update talk_record set cus_id=#{customer.id},way_id=#{way.id},
+		sta_id=#{customer.status2.id},sales_id=#{salesman.id}  where id =#{id}
 	</update>
 	
 	<insert id="insert" parameterType="entity.TalkRecord"  >
-		insert into talk_record (cus_id,w_id,sta_id,car_id,sales_id,ev_id) 
-		 values (#{customer.id}, #{customer.way.id}, #{customer.status2.id},#{customer.car.id},#{customer.salesman.id},1)
+		insert into talk_record (cus_id,way_id,sta_id,sales_id,ev_id) 
+		 values (#{customer.id}, #{way.id}, #{customer.status2.id},#{salesman.id},1)
 	</insert>
 	
 	<delete id="delete" parameterType="entity.TalkRecord">
@@ -89,22 +89,25 @@
 	</delete>
 	
 	<select id="searchBySupervision" resultMap="search" >
-		SELECT * FROM v_talk_cus_way_sta_sales_eval where 1=1 and evId = 1 
+		SELECT * FROM v_talk_cus_way_sta_sales_eval where 1=1 
 		 ORDER BY  RAND() LIMIT 2
 	</select>
 	<resultMap type="entity.TalkRecord" id="searchBySupervision">
 		<id property="id" column="id"></id>
-		<result property="date" column="dates"></result>
+		<result property="dates" column="dates"></result>
 		<association property="customer" column="cus_id"  javaType="entity.Customer">
 			<id property="id" column="cusId"></id>
-			<result property="way.id" column="wId"></result>
-			<result property="way.way" column="way"></result>
+			<result property="name" column="cusName"></result>
 			<result property="status2.id" column="staId"></result>
 			<result property="status2.status2" column="status2"></result>
-			<result property="car.id" column="carId"></result>
-			<result property="car.brand" column="brand"></result>
-			<result property="salesman.id" column="salId"></result>
-			<result property="salesman.name" column="salName"></result>
+		</association>
+		<association property="way" column="way_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
 		</association>
 		<association property="eval" column="ev_id"  javaType="entity.Eval">
 			<id property="id" column="evId"></id>
@@ -122,17 +125,20 @@
 	</select>
 	<resultMap type="entity.TalkRecord" id="searchMaxCId">
 		<id property="id" column="id"></id>
-		<result property="date" column="dates"></result>
+		<result property="dates" column="dates"></result>
 		<association property="customer" column="cus_id"  javaType="entity.Customer">
 			<id property="id" column="cusId"></id>
-			<result property="way.id" column="wId"></result>
-			<result property="way.way" column="way"></result>
+			<result property="name" column="cusName"></result>
 			<result property="status2.id" column="staId"></result>
 			<result property="status2.status2" column="status2"></result>
-			<result property="car.id" column="carId"></result>
-			<result property="car.brand" column="brand"></result>
-			<result property="salesman.id" column="salId"></result>
-			<result property="salesman.name" column="salName"></result>
+		</association>
+		<association property="way" column="way_id"  javaType="entity.Way">
+			<id property="id" column="wId"></id>
+			<result property="way" column="way"></result>
+		</association>
+		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
+			<id property="id" column="salId"></id>
+			<result property="name" column="salName"></result>
 		</association>
 		<association property="eval" column="ev_id"  javaType="entity.Eval">
 			<id property="id" column="evId"></id>

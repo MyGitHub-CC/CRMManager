@@ -73,38 +73,6 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</div>
 		</div>
 		<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">交流方式：</label>
-			<div class="formControls col-xs-8 col-sm-9"> 
-				<span class="select-box">
-					<select class="select" size="1" name="way.id">
-						<option value="0" selected>请选择：</option>
-						<%
-					     	for(int i = 0; i < wayList.size(); i++){
-					     	Way way = wayList.get(i);
-						 %>
-						 <option value="<%=way.getId()%>"><%=way.getWay() %></option>
-						 <% } %>
-					</select>
-				</span> 
-			</div>
-		</div>
-			<div class="row cl">
-			<label class="form-label col-xs-4 col-sm-3">状态：</label>
-			<div class="formControls col-xs-8 col-sm-9"> 
-				<span class="select-box">
-					<select class="select" size="1" name="status2.id">
-						<option value="0" selected>请选择：</option>
-						<%
-					     	for(int i = 0; i < status2List.size(); i++){
-					     	Status status = status2List.get(i);
-						 %>
-						 <option value="<%=status.getId()%>"><%=status.getStatus2() %></option>
-						 <% } %>
-					</select>
-				</span> 
-			</div>
-		</div>
-		<div class="row cl">
 			<label class="form-label col-xs-4 col-sm-3">意向车型：</label>
 			<div class="formControls col-xs-8 col-sm-9"> 
 				<span class="select-box">
@@ -115,6 +83,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					     	Car car = carList.get(i);
 						 %>
 						 <option value="<%=car.getId()%>"><%=car.getBrand() %></option>
+						 <% } %>
+					</select>
+				</span> 
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">交流方式：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="way.id">
+						<option value="0" selected>请选择：</option>
+						<%
+					     	for(int i = 0; i < wayList.size(); i++){
+					     	Way way = wayList.get(i);
+						 %>
+						 <option value="<%=way.getId()%>"><%=way.getWay() %></option>
 						 <% } %>
 					</select>
 				</span> 
@@ -133,6 +117,22 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						 <option value="<%=salesman.getId()%>">
 							 <%=salesman.getName() %>
 						 </option>
+						 <% } %>
+					</select>
+				</span> 
+			</div>
+		</div>
+		<div class="row cl">
+			<label class="form-label col-xs-4 col-sm-3">状态：</label>
+			<div class="formControls col-xs-8 col-sm-9"> 
+				<span class="select-box">
+					<select class="select" size="1" name="status2.id">
+						<option value="0" selected>请选择：</option>
+						<%
+					     	for(int i = 0; i < status2List.size(); i++){
+					     	Status status = status2List.get(i);
+						 %>
+						 <option value="<%=status.getId()%>"><%=status.getStatus2() %></option>
 						 <% } %>
 					</select>
 				</span> 

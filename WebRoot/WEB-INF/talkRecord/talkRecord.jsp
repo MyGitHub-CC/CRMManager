@@ -14,6 +14,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/skin/default/skin.css" id="skin" />
 	<link rel="stylesheet" type="text/css" href="static/h-ui.admin/css/style.css" />
 	<style type="text/css" media="screen">
+	/* CSS Document */
 	/*分页*/
 	#pageGro{ height:25px; float:right;margin-right:20px;}
 	#pageGro div,#pageGro div ul li{ font-size:12px; color:#666; line-height:26px; float:left; margin-left:5px;}
@@ -28,10 +29,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 <%
 	List<TalkRecord> talkRecords = (List<TalkRecord>) request.getAttribute("talkRecords");
-	List<Way> wayList = (List<Way>) request.getAttribute("wayList");
 	List<Car> carList = (List<Car>) request.getAttribute("carList");
 	List<Status> status2List = (List<Status>) request.getAttribute("status2List");
 	List<Salesman> salesmanList = (List<Salesman>) request.getAttribute("salesmanList");
+	List<Way> wayList = (List<Way>) request.getAttribute("wayList");
 	TalkRecord conditionTalk = new TalkRecord();
 	if(request.getAttribute("conditionTalk") != null){
 		conditionTalk = (TalkRecord) request.getAttribute("conditionTalk");
@@ -58,10 +59,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 </nav>
 <div class="page-container">
 	<div class="text-c">
-		<input type="text" class="input-text" style="width:250px" id="customerName" name="name" 
+		<input type="text" class="input-text" style="width:250px" id="customer-name" name="name" 
 		value="<%if(conditionTalk.getCustomer().getName() != null)
 		{out.print(conditionTalk.getCustomer().getName());} %>" />
-		<button type="submit" class="btn btn-success radius" id="search">
+		<button type="submit" class="btn btn-success radius" id="select">
 			<i class="Hui-iconfont">&#xe665;</i> 搜索
 		</button>
 	</div>
@@ -84,11 +85,10 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<th>序号</th>
 				<th>客户姓名</th>
 				<th>交流方式</th>
+				<th>交流时间</th>
 				<th style="width:130px">状态</th>
-				<th style="width:130px">意向车型</th>
 				<th>备注</th>
 				<th>接待销售员</th>
-				<th>交流时间</th>
 				<th>操作</th>
 			</tr>
 		</thead>
@@ -101,20 +101,17 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<td><input type="checkbox" value="1" name=""></td>
 				<td><%=talkRecord.getId() %></td>
 				<td><%=talkRecord.getCustomer().getName() %></td>
-				<td><%=talkRecord.getCustomer().getWay().getWay() %></td>
+				<td><%=talkRecord.getWay().getWay() %></td>
+				<td><%=talkRecord.getDates() %></td>
 				<td >
 					<span class="label label-success radius">
 						<%=talkRecord.getCustomer().getStatus2().getStatus2() %>
 					</span>
 				</td>
-				<td >
-					<%=talkRecord.getCustomer().getCar().getBrand() %>
-				</td>
 				<td>
 					33
 				</td>
-				<td><%=talkRecord.getCustomer().getSalesman().getName() %></td>
-				<td><%=talkRecord.getDate() %></td>
+				<td><%=talkRecord.getSalesman().getName() %></td>
 				<td class="td-manage">
 					<a title="修改" href="javascript:;" class="ml-5 modify" style="text-decoration:none" data-toggle="modal" data-target="#myModal">
 						<i class="Hui-iconfont">&#xe6df;</i>
@@ -191,94 +188,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</button>
 			</div>
 			<div class="modal-body" id="modal-body-table">
-				<article class="page-container">
-				 <form method="post" class="form form-horizontal" >
-					<input type="hidden" name="id" />
-					<input type="hidden" name="customer.id" class="customerId" />
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3"><span class="c-red">*</span>客户姓名：</label>
-						<div class="formControls col-xs-8 col-sm-9">
-							<input type="text" class="input-text" name="customer.name"  id="customer-name" />
-						</div>
-					</div>
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3">交流方式：</label>
-						<div class="formControls col-xs-8 col-sm-9"> 
-							<span class="select-box">
-								<select class="select" size="1" name="customer.way.id">
-									<option value="0" >请选择：</option>
-									<%
-								     	for(int i = 0; i < wayList.size(); i++){
-								     	Way way = wayList.get(i);
-									 %>
-									 <option value="<%=way.getId()%>" class="wayId"  data-wId="<%=way.getId()%>">
-									 <%=way.getWay() %></option>
-									 <% } %>
-								</select>
-							</span> 
-						</div>
-					</div>
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3">状态：</label>
-						<div class="formControls col-xs-8 col-sm-9"> 
-							<span class="select-box">
-								<select class="select" size="1" name="customer.status2.id" >
-									<option value="0">请选择：</option>
-									<%
-								     	for(int i = 0; i < status2List.size(); i++){
-								     	Status status = status2List.get(i);
-									 %>
-									 <option value="<%=status.getId()%>" class="status2Id"  data-sId="<%=status.getId()%>">
-									 <%=status.getStatus2() %></option>
-									 <% } %>
-								</select>
-							</span> 
-						</div>
-					</div>
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3">意向车型：</label>
-						<div class="formControls col-xs-8 col-sm-9"> 
-							<span class="select-box">
-								<select class="select" size="1" name="customer.car.id">
-									<option value="0">请选择：</option>
-									<%
-								      for(int i = 0; i < carList.size(); i++){
-								     	Car car = carList.get(i);
-									 %>
-									 <option value="<%=car.getId()%>" class="carId" data-cId="<%=car.getId()%>">
-									 <%=car.getBrand() %></option>
-									 <% } %>
-								</select>
-							</span> 
-						</div>
-					</div>
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3">接待销售员：</label>
-						<div class="formControls col-xs-8 col-sm-9"> 
-							<span class="select-box">
-								<select class="select" size="1" name="customer.salesman.id">
-									<option value="0" >请选择：</option>
-									<%
-								      for(int i = 0; i < salesmanList.size(); i++){
-								     	Salesman salesman = salesmanList.get(i);
-									 %>
-									 <option value="<%=salesman.getId()%>" class="salesId"  data-sId="<%=salesman.getId()%>">
-										 <%=salesman.getName() %>
-									 </option>
-									 <% } %>
-								</select>
-							</span> 
-						</div>
-					</div>
-					<div class="row cl">
-						<label class="form-label col-xs-4 col-sm-3">备注：</label>
-						<div class="formControls col-xs-8 col-sm-9">
-							<textarea  class="textarea" style="height:80px;"></textarea>
-							<p class="textarea-numberbar"><em class="textarea-length">0</em>/100</p>
-						</div>
-					</div>
-					</form>
-				</article>
+				
 			</div>
 			<div class="modal-footer">
 				<button id="submit-customer" type="button" class="btn btn-primary">
@@ -301,15 +211,42 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 <script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
 <script type="text/javascript">
 $(document).ready(function(){
+	var carMap = {};
+	var status2Map = {};
+	var salesmanMap = {};
+	var wayMap = {};
+	<% for (int i=0; i < carList.size(); i++){%>
+		var key = <%=carList.get(i).getId() %>;
+		var value = "<%=carList.get(i).getBrand()%>";
+		carMap[key] = value;
+	<% } %>
+	<% for (int i=0; i < status2List.size(); i++){%>
+		var key = <%=status2List.get(i).getId() %>;
+		var value = "<%=status2List.get(i).getStatus2()%>";
+		status2Map[key] = value;
+	<% } %>
+	<% for (int i=0; i < salesmanList.size(); i++){%>
+		var key = <%=salesmanList.get(i).getId() %>;
+		var value = "<%=salesmanList.get(i).getName() %>";
+		salesmanMap[key] = value;
+	<% } %>
+	<% for (int i=0; i < wayList.size(); i++){%>
+		var key = <%=wayList.get(i).getId() %>;
+		var value = "<%=wayList.get(i).getWay()%>";
+		wayMap[key] = value;
+	<% } %>
 	var selectId = 0;
 	$("tr").click(function(){
 		$("tr").removeClass("info");
 		$(this).addClass("info");
 		selectId = $(this).attr("data-tId");
 	});
+	
 	$("#addTalkRecord").click(function(){
+		alert(selectId);
+		var cId = <%=cId%>;
 		if(selectId == 0){
-			alert("请选择要添加的记录的客户！");
+			alert("请选择要添加的记录！");
 		} else{
 			$.ajax({
 			type:"post",
@@ -317,41 +254,48 @@ $(document).ready(function(){
 			data:"tId=" + selectId,
 			dataType:"json",
 			success:function(data){
-				var statusId ;
-				var carId ;
-				var salesId ;
-				var wayId ;
+				var tab = "<form> ";
+				tab += "<table id='modify-table' class='table table-border table-bordered table-hover table-bg table-sort'><thead><tr class='text-c'>";
+				tab += "<th width='25'><input type='checkbox'></th><th>序号</th><th>客户姓名</th><th>交流方式</th><th>状态</th>";
+				tab += "<th>接待销售员</th><th>备注</th></tr></thead><tbody>";
 				$.each(data,function(index, element){
-					cId = element.customer.id;
-					name = element.customer.name;
-					wayId = element.customer.way.id;
-					statusId = element.customer.status2.id;
-					carId = element.customer.car.id;
-					salesId = element.customer.salesman.id;
+					tab += "<tr class='text-c'>";
+					tab += "<td><input type='checkbox' value='1'></td>";
+					tab += "<td><input type='hidden' style='width:50px;' name='id' value='-1'>" + element.id + "</td>";
+					tab += "<td><input type='hidden' style='width:80px;' name='customer.id' value='" + element.customer.id + "'>" + element.customer.name + "</td>";
+					tab += "<td class='td-status'><select name='way.id'>";
+					$.each(wayMap, function(key,values){     
+					     tab += "<option "  ;
+					     if(element.way.id == key){
+					     	tab += " selected='selected' ";
+					     }
+					     tab += " value='" + key + "'>" + wayMap[key] + "</option>";
+					}); 
+					tab += "</select></td>";
+					tab += "<td class='td-status'><select name='customer.status2.id'>";
+					$.each(status2Map, function(key,values){     
+					     tab += "<option "  ;
+					     if(element.customer.status2.id == key){
+					     	tab += " selected='selected' ";
+					     }
+					     tab += " value='" + key + "'>" + status2Map[key] + "</option>";
+					}); 
+					tab += "</select></td>";
+					tab += "<td><select name='salesman.id'>";
+					$.each(salesmanMap,function(key,values){     
+					     tab += "<option "  ;
+					     if(element.salesman.id == key){
+					     	tab += " selected='selected' ";
+					     }
+					     tab += " value='" + key + "'>" + salesmanMap[key] + "</option>";
+					}); 
+					tab += "</select></td>";
+					tab += "<td><input type='text' /></td>";
+					tab += "</tr>";
 				});
-				$("[name=id]").val(0);
-				$(".customerId").val(cId);
-				$("#customer-name").val(name);
-				$(".wayId").each(function(index,element){
-					if($(this).attr("data-wId") == wayId){
-						$(this).prop("selected","selected");
-					}
-				});
-				$(".status2Id").each(function(index,element){
-					if($(this).attr("data-sId") == statusId){
-						$(this).prop("selected","selected");
-					}
-				});
-				$(".carId").each(function(index,element){
-					if($(this).attr("data-cId") == carId){
-						$(this).prop("selected","selected");
-					}
-				});
-				$(".salesId").each(function(index,element){
-					if($(this).attr("data-sId") == salesId){
-						$(this).prop("selected","selected");
-					}
-				});
+				tab += "</tbody></table>";
+				tab += "</form>";
+				$("#modal-body-table").html(tab);
 			}
 		});
 		}
@@ -365,41 +309,48 @@ $(document).ready(function(){
 			data:"tId=" + tId,
 			dataType:"json",
 			success:function(data){
-				var statusId ;
-				var carId ;
-				var salesId ;
-				var wayId ;
+				var tab = "<form > ";
+				tab += "<table id='modify-table' class='table table-border table-bordered table-hover table-bg table-sort'><thead><tr class='text-c'>";
+				tab += "<th width='25'><input type='checkbox'></th><th>序号</th><th>客户姓名</th><th>交流方式</th><th>状态</th>";
+				tab += "<th>接待销售员</th><th>备注</th></tr></thead><tbody>";
 				$.each(data,function(index, element){
-					cId = element.customer.id;
-					name = element.customer.name;
-					wayId = element.customer.way.id;
-					statusId = element.customer.status2.id;
-					carId = element.customer.car.id;
-					salesId = element.customer.salesman.id;
+					tab += "<tr class='text-c'>";
+					tab += "<td><input type='checkbox' value='1'></td>";
+					tab += "<td><input type='hidden' style='width:50px;' name='id' value='" + element.id + "'>" + element.id + "</td>";
+					tab += "<td><input type='hidden' style='width:80px;' name='customer.id' value='" + element.customer.id + "'>" + element.customer.name + "</td>";
+					tab += "<td class='td-status'><select name='way.id'>";
+					$.each(wayMap, function(key,values){     
+					     tab += "<option "  ;
+					     if(element.way.id == key){
+					     	tab += " selected='selected' ";
+					     }
+					     tab += " value='" + key + "'>" + wayMap[key] + "</option>";
+					}); 
+					tab += "</select></td>";
+					tab += "<td class='td-status'><select name='customer.status2.id'>";
+					$.each(status2Map, function(key,values){     
+					     tab += "<option "  ;
+					     if(element.customer.status2.id == key){
+					     	tab += " selected='selected' ";
+					     }
+					     tab += " value='" + key + "'>" + status2Map[key] + "</option>";
+					}); 
+					tab += "</select></td>";
+					tab += "<td><select name='salesman.id'>";
+					$.each(salesmanMap,function(key,values){     
+					     tab += "<option "  ;
+					     if(element.salesman.id == key){
+					     	tab += " selected='selected' ";
+					     }
+					     tab += " value='" + key + "'>" + salesmanMap[key] + "</option>";
+					}); 
+					tab += "</select></td>";
+					tab += "<td><input type='text' /></td>";
+					tab += "</tr>";
 				});
-				$("[name=id]").val(tId);
-				$(".customerId").val(cId);
-				$("#customer-name").val(name);
-				$(".wayId").each(function(index,element){
-					if($(this).attr("data-wId") == wayId){
-						$(this).prop("selected","selected");
-					}
-				});
-				$(".status2Id").each(function(index,element){
-					if($(this).attr("data-sId") == statusId){
-						$(this).prop("selected","selected");
-					}
-				});
-				$(".carId").each(function(index,element){
-					if($(this).attr("data-cId") == carId){
-						$(this).prop("selected","selected");
-					}
-				});
-				$(".salesId").each(function(index,element){
-					if($(this).attr("data-sId") == salesId){
-						$(this).prop("selected","selected");
-					}
-				});
+				tab += "</tbody></table>";
+				tab += "</form>";
+				$("#modal-body-table").html(tab);
 			}
 		});
 	});
@@ -412,6 +363,7 @@ $(document).ready(function(){
 		}else{
 			obj = "add";
 		}
+		alert(obj);
 		$.ajax({
 			type:"post",
 			url: obj + "TalkRecord",
@@ -429,10 +381,11 @@ $(document).ready(function(){
 	$(".delete").click(function(){
 		var tId = $(this).parents("tr").attr("data-tId");
 		var cId = $(this).parents("tr").attr("data-cId");
+		//alert(tId);
 		$.ajax({
 			type:"post",
 			url: "deleteTalkRecord",
-			data:"id=" + tId + "&customer.id=" + cId,
+			data:"id=" + tId + "customer.id=" + cId,
 			dataType:"text",
 			success: function(data){
 				alert(data);
@@ -442,8 +395,8 @@ $(document).ready(function(){
 			}
 		});
 	});
-	$("#search").click(function(){
-		var name = $("#customerName").val();
+	$("#select").click(function(){
+		var name = $("#customer-name").val();
 		window.location.href="talkRecord?customer.name=" + name;
 	});
 });
