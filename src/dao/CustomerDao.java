@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
 import entity.Customer;
+import entity.Statistics;
 import entity.TalkRecord;
 
 public interface CustomerDao {
@@ -26,5 +27,7 @@ public interface CustomerDao {
 	public int delete(int cId);
 
 	public int updateTalkRecord(TalkRecord talkRecord);
+
+	public List<Statistics> searchStatis();
 
 }

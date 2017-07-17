@@ -3,6 +3,7 @@ package service;
 import java.util.List;
 
 import entity.Customer;
+import entity.Statistics;
 
 public interface CustomerService {
 
@@ -19,5 +20,7 @@ public interface CustomerService {
 	public int deleteUpdate(int cId,int del);
 
 	public int delete(int cId);
+
+	public List<Statistics> searchStatis();
 
 }

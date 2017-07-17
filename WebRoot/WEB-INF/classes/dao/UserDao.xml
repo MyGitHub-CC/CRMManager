@@ -36,7 +36,7 @@
 	</resultMap>
 	
 	<select id="searchByCondition" resultMap="searchByCondition">
-		select u.id,sales.id as salId,sales.name from users as u inner join salesman as sales on u.sales_id = sales.id
+		select u.id,sales.id as salId,sales.name,sales.r_id from users as u inner join salesman as sales on u.sales_id = sales.id
 		 where name = #{salesman.name} and password=#{password}
 	</select>
 	<resultMap type="entity.User" id="searchByCondition" >
@@ -44,6 +44,7 @@
 		<association property="salesman" column="sales_id"  javaType="entity.Salesman">
 			<id property="id" column="salId"></id>
 			<result property="name" column="name"></result>
+			<result property="rank.id" column="r_id"></result>
 		</association>
 	</resultMap>
 	

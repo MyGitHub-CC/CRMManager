@@ -23,6 +23,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 		salesman = user.getSalesman();
 	}
 	user.setSalesman(salesman);
+	int rId = (Integer) user.getSalesman().getRank().getId();
  %>
 <body>
 <header class="navbar-wrapper">
@@ -74,6 +75,9 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</ul>
 			</dd>
 		</dl>
+		<%
+			if(rId == 3){
+		 %>
 		<dl id="menu-product">
 			<dt><i class="Hui-iconfont">&#xe620;</i> 车辆管理<i class="Hui-iconfont menu_dropdown-arrow">&#xe6d5;</i></dt>
 			<dd>
@@ -113,7 +117,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 					<li><a data-href="charts-4.html" data-title="柱状图" href="javascript:void(0)">柱状图</a></li>
 					<li><a data-href="charts-5.html" data-title="饼状图" href="javascript:void(0)">饼状图</a></li>
 					<li><a data-href="charts-6.html" data-title="3D柱状图" href="javascript:void(0)">3D柱状图</a></li>
-					<li><a data-href="charts-7.html" data-title="3D饼状图" href="javascript:void(0)">3D饼状图</a></li>
+					<li><a data-href="statistics" data-title="3D饼状图" href="javascript:void(0)">3D饼状图</a></li>
 				</ul>
 			</dd>
 		</dl>
@@ -163,6 +167,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 			</dd>
 		</dl>
 	</div>
+	<%} %>
 </aside>
 <div class="dislpayArrow hidden-xs"><a class="pngfix" href="javascript:void(0);" onClick="displaynavbar(this)"></a></div>
 <section class="Hui-article-box">

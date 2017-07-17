@@ -103,5 +103,19 @@
 		car_id=#{customer.car.id},sales_id=#{customer.salesman.id} where id =#{customer.id}
 	</update>
 
+	<select id="searchStatis" resultMap="searchStatis" >
+		SELECT cus.sta_id,sta.status2,cast(COUNT(cus.id)*1.0/(SELECT count(id) from customer) 
+		 as decimal(28,2)) as pre FROM customer as cus INNER JOIN status2 as sta on cus.sta_id = sta.id 
+ 		 GROUP BY cus.sta_id 
+	</select>
+	<resultMap type="entity.Statistics" id="searchStatis">
+		<id property="id" column="sta_id"></id>
+		<result property="pre" column="pre"></result>
+		<association property="customer"  javaType="entity.Customer">
+			<result property="status2.id" column="sta_id"></result>
+			<result property="status2.status2" column="status2"></result>
+		</association>
+	</resultMap>
+	
 </mapper> 
     

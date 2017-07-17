@@ -9,6 +9,7 @@ import service.CustomerService;
 import dao.CustomerDao;
 import dao.TalkRecordDao;
 import entity.Customer;
+import entity.Statistics;
 import entity.TalkRecord;
 
 @Service
@@ -68,6 +69,11 @@ public class CustomerServiceImpl implements CustomerService {
 	@Override
 	public int delete(int cId) {
 		return customerDao.delete(cId);
+	}
+
+	@Override
+	public List<Statistics> searchStatis() {
+		return customerDao.searchStatis();
 	}
 
 }
