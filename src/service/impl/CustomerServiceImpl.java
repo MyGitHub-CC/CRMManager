@@ -9,12 +9,9 @@ import service.CustomerService;
 import dao.CustomerDao;
 import dao.TalkRecordDao;
 import entity.Customer;
-<<<<<<< HEAD
 import entity.Statistics;
-=======
 import entity.Salesman;
 import entity.Status;
->>>>>>> parent of 60a567f... 初步完成功能
 import entity.TalkRecord;
 import entity.Way;
 

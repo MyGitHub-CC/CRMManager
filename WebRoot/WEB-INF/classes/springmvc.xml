@@ -35,5 +35,4 @@
 	<mvc:resources mapping="static/**" location="/static/" />
 	<mvc:resources mapping="lib/**" location="/lib/" />
 
-
 </beans>  

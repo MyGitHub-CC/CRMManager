@@ -24,7 +24,7 @@
 			<result property="status2.id" column="staId"></result>
 			<result property="status2.status2" column="status2"></result>
 		</association>
-		<association property="way" column="way_id"  javaType="entity.Way">
+		<association property="way" column="w_id"  javaType="entity.Way">
 			<id property="id" column="wId"></id>
 			<result property="way" column="way"></result>
 		</association>
@@ -60,7 +60,7 @@
 			<result property="status2.id" column="staId"></result>
 			<result property="status2.status2" column="status2"></result>
 		</association>
-		<association property="way" column="way_id"  javaType="entity.Way">
+		<association property="way" column="w_id"  javaType="entity.Way">
 			<id property="id" column="wId"></id>
 			<result property="way" column="way"></result>
 		</association>
@@ -75,12 +75,12 @@
 	</resultMap>
 	
 	<update id="update" parameterType="entity.TalkRecord"  >
-		update talk_record set cus_id=#{customer.id},way_id=#{way.id},
+		update talk_record set cus_id=#{customer.id},way_id=#{w.id},
 		sta_id=#{customer.status2.id},sales_id=#{salesman.id}  where id =#{id}
 	</update>
 	
 	<insert id="insert" parameterType="entity.TalkRecord"  >
-		insert into talk_record (cus_id,way_id,sta_id,sales_id,ev_id) 
+		insert into talk_record (cus_id,w_id,sta_id,sales_id,ev_id) 
 		 values (#{customer.id}, #{way.id}, #{customer.status2.id},#{salesman.id},1)
 	</insert>
 	
